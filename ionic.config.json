@@ -1,0 +1,7 @@
+{
+  "name": "mundosano",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
