@@ -15,6 +15,7 @@ import './Home.css';
 import ControlesPacientes from '../components/ControlesPaciente';
 
 import { IoCreateOutline } from "react-icons/io5";
+import { NOMBRE_BB_DD } from '../utils/constantes';
 
 
 export interface control {
@@ -69,12 +70,12 @@ const DetallePaciente: React.FC = () => {
             try {
                 const dbdb = async () => {
                     const ret = await sqlite.checkConnectionsConsistency();
-                    const isConn = (await sqlite.isConnection("triplefrontera")).result;
+                    const isConn = (await sqlite.isConnection(NOMBRE_BB_DD)).result;
                     var db: SQLiteDBConnection
                     if (ret.result && isConn) {
-                        return db = await sqlite.retrieveConnection("triplefrontera");
+                        return db = await sqlite.retrieveConnection(NOMBRE_BB_DD);
                     } else {
-                        return db = await sqlite.createConnection("triplefrontera");
+                        return db = await sqlite.createConnection(NOMBRE_BB_DD);
                     }
                 }
                 const db = await dbdb()

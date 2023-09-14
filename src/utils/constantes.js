@@ -1,3 +1,3 @@
-const maximo=399999
-const minimo=300000
-export{maximo,minimo}
+const NOMBRE_BB_DD="elsoberbio";
+const BASE_URL = 'https://api.elsoberbio.unsada.edu.ar/api';
+export{NOMBRE_BB_DD,BASE_URL}

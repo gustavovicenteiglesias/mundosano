@@ -325,7 +325,7 @@ const NuevoControl: React.FC = () => {
         }
 
         const newEtmisPersonas: Etmis_Personas = {
-            id_personas: Number(paciente.id_persona),
+            id_persona: Number(paciente.id_persona),
             id_etmi: 3,
             id_control: ultimo_id_control,
             confirmada: 1,

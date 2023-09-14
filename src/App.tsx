@@ -37,7 +37,7 @@ import EditControlEmbrazada from './pages/EditControlEmbarazada';
 import NuevoControl from './pages/NuevoControl';
 import EditarAntecedentes from './pages/EditarAntecedentes';
 import { CargarBase } from './data/CargarBase';
-
+import { NOMBRE_BB_DD } from './utils/constantes';
 
 
 interface JsonListenerInterface {
@@ -68,7 +68,7 @@ const App: React.FC = () => {
   const [showEdituser, setShowEditUser] = useState<boolean>(false);
   const [showReaduser, setShowReadUser] = useState<boolean>(false);
   const [permisGeo, setPermisGeo] = useState<boolean>(false);
-
+  
   existingConn = { existConn: existConn, setExistConn: setExistConn };
 
   // !!!!! if you do not want to use the progress events !!!!!
@@ -77,6 +77,7 @@ const App: React.FC = () => {
   // before
   // sqlite = useSQLite({})
   // !!!!!                                               !!!!!
+  console.log(NOMBRE_BB_DD)
 
   sqlite = useSQLite();
 
@@ -84,19 +85,19 @@ const App: React.FC = () => {
   const Base = async (): Promise<Boolean> => {
     try {
       const platform = (await sqlite.getPlatform()).platform;
-      let existe: any = await sqlite.isDatabase("triplefrontera")
+      let existe: any = await sqlite.isDatabase(NOMBRE_BB_DD)
       if (!existe.result) {
        await  CargarBase()
        
         setExistConn(true)
         console.log("se cargo base ")
         if (platform === "web") {
-          await sqlite.saveToStore("triplefrontera");
+          await sqlite.saveToStore(NOMBRE_BB_DD);
 
         }
 
       } else {
-        await sqlite.createConnection("triplefrontera")
+        await sqlite.createConnection(NOMBRE_BB_DD)
         console.log("ya tiene  base ")
         setExistConn(true)
       }

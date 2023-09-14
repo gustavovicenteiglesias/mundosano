@@ -10,11 +10,13 @@ import { Etmis_Personas, InicialEtmis_Personas } from "../models/Etmis_Personas"
 import { Inmunizaciones_Control, InicialInmunizacionesControl } from "../models/Inmunizaciones_Control";
 import { Laboratorios_Realizados, InicialLaboratorios } from "../models/Laboratorios_Realizados";
 import { Ubicaciones, InicialUbicaciones } from "../models/Ubicaciones";
+import { Usuarios,InitialUsuario } from "../models/Usuarios";
 import { datos } from "./exportarIII..last";
 import { Repository } from "../repository/Repository";
 import { SQLiteDBConnection } from "react-sqlite-hook";
 import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
+import withReactContent from 'sweetalert2-react-content';
+import { BASE_URL, NOMBRE_BB_DD } from "../utils/constantes";
 
 const query=`DROP TRIGGER "control_embarazo_trigger_last_modified";
 CREATE TRIGGER control_embarazo_trigger_last_modified AFTER UPDATE ON control_embarazo FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified BEGIN UPDATE control_embarazo SET last_modified = (strftime('%s','now')) WHERE id_control_embarazo=OLD.id_control_embarazo; END;
@@ -55,15 +57,20 @@ CREATE TRIGGER laboratorios_realizados_trigger_last_modified AFTER UPDATE ON lab
 DROP  TRIGGER "personas_trigger_last_modified";
 CREATE TRIGGER personas_trigger_last_modified AFTER UPDATE ON personas FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified BEGIN UPDATE personas SET last_modified = (strftime('%s','now')) WHERE id_persona=OLD.id_persona; END;
 DROP TRIGGER "ubicaciones_trigger_last_modified";
-CREATE TRIGGER ubicaciones_trigger_last_modified AFTER UPDATE ON ubicaciones FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified BEGIN UPDATE ubicaciones SET last_modified = (strftime('%s','now')) WHERE id_ubicacion=OLD.id_ubicacion; END;`
+CREATE TRIGGER ubicaciones_trigger_last_modified AFTER UPDATE ON ubicaciones FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified BEGIN UPDATE ubicaciones SET last_modified = (strftime('%s','now')) WHERE id_ubicacion=OLD.id_ubicacion; END;
+DROP TRIGGER "usuarios_trigger_last_modified";
+CREATE TRIGGER usuarios_trigger_last_modified AFTER UPDATE ON usuarios FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified BEGIN UPDATE usuarios SET last_modified = (strftime('%s','now')) WHERE id_usuario=OLD.id_usuario; END;
+`
+
+
 const dbdb = async () => {
     const ret = await sqlite.checkConnectionsConsistency();
-    const isConn = (await sqlite.isConnection("triplefrontera")).result;
+    const isConn = (await sqlite.isConnection(NOMBRE_BB_DD)).result;
     var db: SQLiteDBConnection;
     if (ret.result && isConn) {
-        return db = await sqlite.retrieveConnection("triplefrontera");
+        return db = await sqlite.retrieveConnection(NOMBRE_BB_DD);
     } else {
-        return db = await sqlite.createConnection("triplefrontera");
+        return db = await sqlite.createConnection(NOMBRE_BB_DD);
     }
 }
 
@@ -89,6 +96,7 @@ export async function CargarBase (){
     const repositoryInmunizacionesControl = new Repository<Inmunizaciones_Control>("inmunizaciones_control")
     const repositoryLaboratoriosRealizados = new Repository<Laboratorios_Realizados>("laboratorios_realizados")
     const repositoryEtmisPersonas = new Repository<Etmis_Personas>("etmis_personas")
+    const repositoryUsuarios = new Repository<Usuarios>("usuarios")
 
     //
     const MySwal = withReactContent(Swal)
@@ -106,9 +114,10 @@ export async function CargarBase (){
         antecedentes_apps: [],
         antecedentes_macs: [],
         etmis_personas: [],
+        usuarios:[]
     };
     try {
-        await axios.get("https://areco.gob.ar:9535/api/data/json3")
+        await axios.get(BASE_URL+"/data/json3")
         .then(async (resp) => {
             //console.log("La respuesta es " + JSON.stringify(resp.data.tables))
             resp.data.tables.map((dato: any, i: any) => {
@@ -129,6 +138,7 @@ export async function CargarBase (){
             const antecedentes_macs: Antecedentes_Macs[] = combinarValores<Antecedentes_Macs>(InicialAntecedentes_Macs, valores.antecedentes_macs);
             const etmis_personas: Etmis_Personas[] = combinarValores<Etmis_Personas>(InicialEtmis_Personas, valores.etmis_personas);
             const laboratoriosRealizados:Laboratorios_Realizados[]=combinarValores<Laboratorios_Realizados>(InicialLaboratorios,valores.laboratorios_realizados)
+            const usuario:Usuarios[]=combinarValores<Usuarios>(InitialUsuario,valores.usuarios)
             
             await repositoryPersonas.insert(persona)
                 .then(async (resp) => {
@@ -160,7 +170,10 @@ export async function CargarBase (){
                                                                                     await repositoryLaboratoriosRealizados.insert(laboratoriosRealizados)
                                                                                     .then(async (resp) => {
                                                                                         console.log("Inserto laboratorios")
-                                                                                        await db.open();
+                                                                                        await repositoryUsuarios.insert(usuario)
+                                                                                        .then(async(resp)=>{
+                                                                                            console.log("Inserto usuarios")
+                                                                                            await db.open();
                                                                                         let rescrate: any = await db.createSyncTable();
                                                                                         console.log(`Create Table ${JSON.stringify(rescrate.changes)}`)
                                                                                         //creo un punto de restauracion en fecha 
@@ -176,7 +189,10 @@ export async function CargarBase (){
                                                                                         }
                                                                                         
                                                                                         console.log(`fecha ${de}`)
-                                                                                        axios.post("https://areco.gob.ar:9535/api/sync_date", datos)
+                                                                                        axios.post(BASE_URL+"/sync_date", datos)
+                                                                                        })
+                                                                                        
+                                                                                        
                                                                                         
                                                                                     })
                                                                                 })

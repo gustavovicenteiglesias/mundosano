@@ -1,6 +1,10 @@
+import { NOMBRE_BB_DD } from "../utils/constantes"
+
+
 export const datos={
     
-    "database": "triplefrontera",
+    "database": NOMBRE_BB_DD
+,
     "version": 1,
     "encrypted": false,
     "mode": "full",

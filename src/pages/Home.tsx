@@ -50,6 +50,7 @@ const Home: React.FC = () => {
    
 
   }
+  
   useEffect(() => {
     async function de_vice() {
       Device.getId().then(async (info) => {

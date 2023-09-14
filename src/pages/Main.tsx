@@ -11,7 +11,7 @@ import { sqlite, existingConn, db } from "../App"
 import { SQLiteDBConnection } from "react-sqlite-hook";
 import { CargarBase } from '../data/CargarBase';
 import { Network } from '@capacitor/network';
-
+import { NOMBRE_BB_DD ,BASE_URL} from '../utils/constantes';
 
 
 const Main: React.FC<any> = () => {
@@ -47,12 +47,12 @@ const Main: React.FC<any> = () => {
 
     const dbdb = async () => {
         const ret = await sqlite.checkConnectionsConsistency();
-        const isConn = (await sqlite.isConnection("triplefrontera")).result;
+        const isConn = (await sqlite.isConnection(NOMBRE_BB_DD)).result;
         var db: SQLiteDBConnection;
         if (ret.result && isConn) {
-            return db = await sqlite.retrieveConnection("triplefrontera");
+            return db = await sqlite.retrieveConnection(NOMBRE_BB_DD);
         } else {
-            return db = await sqlite.createConnection("triplefrontera");
+            return db = await sqlite.createConnection(NOMBRE_BB_DD);
         }
     }
 
@@ -105,7 +105,7 @@ const Main: React.FC<any> = () => {
     const exportJsontoApi = async () => {
         const db = await dbdb()
         setLoading(true)
-        axios.post("https://areco.gob.ar:9535/api/sqlite", data)
+        axios.post(BASE_URL+"/sqlite", data)
             .then(async (resp) => {
 
                 setLoading(false)
@@ -123,7 +123,7 @@ const Main: React.FC<any> = () => {
                     }
 
                     console.log(`fecha ${de}`)
-                    axios.post("https://areco.gob.ar:9535/api/sync_date", datos)
+                    axios.post(BASE_URL+"/sync_date", datos)
                     setColorLogo(true)
                 } else {
                     setColorLogo(false)
@@ -149,7 +149,7 @@ const Main: React.FC<any> = () => {
         const db = await dbdb()
             let borrar: any = await db.delete()
             console.log("se borro")
-            let existe: any = await sqlite.isDatabase("triplefrontera")
+            let existe: any = await sqlite.isDatabase(NOMBRE_BB_DD)
             console.log(`Existe ${JSON.stringify(existe)}`)
     
             if (!existe.result) {

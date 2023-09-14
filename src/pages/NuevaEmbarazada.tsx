@@ -97,6 +97,7 @@ const NuevaEmbarazada: React.FC = () => {
                 setPaciente((prevProps) => ({ ...prevProps, latitud: resp.coords.latitude }))
                 setPaciente((prevProps) => ({ ...prevProps, longitud: resp.coords.longitude }))
             })
+            .catch((e)=>console.log(e))
 
     };
 
@@ -305,8 +306,7 @@ const NuevaEmbarazada: React.FC = () => {
                                     <IonSelect onIonChange={(e) => { handleInputChange(e); setValue("pais_residencia", e.detail.value) }} name="pais_residencia">
                                        
                                         <IonSelectOption value={12} >Argentina</IonSelectOption>
-                                        <IonSelectOption value={27} >Bolivia</IonSelectOption>
-                                        <IonSelectOption value={177} >Paraguay</IonSelectOption>
+                                       
                                     </IonSelect>
                                 )}
                                 control={control}

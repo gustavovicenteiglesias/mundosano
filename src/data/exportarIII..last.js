@@ -1,6 +1,9 @@
+import { NOMBRE_BB_DD } from "../utils/constantes"
+
 export const datos={
     
-    "database": "triplefrontera",
+    "database": NOMBRE_BB_DD
+,
     "version": 1,
     "encrypted": false,
     "mode": "full",
@@ -2336,29 +2339,8 @@ export const datos={
             "values": [
                 [
                     1,
-                    27,
-                    "BOLIVIA",
-                    0,
-                    1681778592
-                ],
-                [
-                    2,
-                    177,
-                    "PARAGUAY",
-                    0,
-                    1681778592
-                ],
-                [
-                    3,
                     12,
-                    "SANTA VICTORIA ESTE",
-                    0,
-                    1681778592
-                ],
-                [
-                    4,
-                    12,
-                    "ALTO LA SIERRA",
+                    "EL Soberbio",
                     0,
                     1681778592
                 ]
@@ -5416,304 +5398,116 @@ export const datos={
                 [
                     1,
                     1,
-                    "CREVAUX",
+                    "Aldea Itaomirí",
                     0,
                     1681778922
                 ],
                 [
                     2,
                     1,
-                    "D'ORBIGNI",
+                    "Aldea Jejy",
                     0,
                     1681778922
                 ],
                 [
                     3,
-                    2,
-                    "POZO HONDO",
+                    1,
+                    "Aldea JejyMiri",
                     0,
                     1681778922
                 ],
                 [
                     4,
-                    2,
-                    "SAN AGUSTÍN",
+                    1,
+                    "Aldea Pindo Poty",
                     0,
                     1681778922
                 ],
                 [
                     7,
-                    4,
-                    "ALTO LA SIERRA",
+                    1,
+                    "Aldea Pindoty",
                     0,
                     1681778922
                 ],
                 [
                     8,
-                    4,
-                    "PUESTO EL PANCHO",
+                    1,
+                    "Aldea Tacoayma",
                     0,
                     1681778922
                 ],
                 [
                     9,
-                    4,
-                    "EL TRAMPEADERO",
+                    1,
+                    "Aldea Yriapy",
                     0,
                     1681778922
                 ],
                 [
                     10,
-                    4,
-                    "LA ESPERANZA",
+                    1,
+                    "CAPS Cristal",
                     0,
                     1681778922
                 ],
                 [
                     11,
-                    4,
-                    "POZO EL MULATO",
+                    1,
+                    "CAPS Chafaris",
                     0,
                     1681778922
                 ],
                 [
                     12,
-                    4,
-                    "EL DESEMBOQUE",
+                    1,
+                    "CAPS El Paraíso",
                     0,
                     1681778922
                 ],
                 [
                     13,
-                    4,
-                    "POZO EL BRAVO",
+                    1,
+                    "CAPS Km 18",
                     0,
                     1681778922
                 ],
                 [
                     14,
-                    4,
-                    "LA JUNTA",
+                    1,
+                    "CAPS La Flor",
                     0,
                     1681778922
                 ],
                 [
                     15,
-                    4,
-                    "BAJO GRANDE",
+                    1,
+                    "CAPS Mariano Moreno",
                     0,
                     1681778922
                 ],
                 [
                     16,
-                    4,
-                    "AGUAS VERDES",
+                    1,
+                    "CAPS Monteagudo",
                     0,
                     1681778922
                 ],
                 [
                     17,
-                    3,
-                    "MAGDALENA",
+                    1,
+                    "Hospital",
                     0,
                     1681778922
                 ],
                 [
                     18,
-                    3,
-                    "NUEVA ESPERANZA LA PUNTANA",
-                    0,
-                    1681778922
-                ],
-                [
-                    19,
-                    3,
-                    "TRES",
-                    0,
-                    1681778922
-                ],
-                [
-                    20,
-                    3,
-                    "EL BORDO",
-                    0,
-                    1681778922
-                ],
-                [
-                    21,
-                    3,
-                    "MONTE CARMELO",
-                    0,
-                    1681778922
-                ],
-                [
-                    22,
-                    3,
-                    "LA CURVITA",
-                    0,
-                    1681778922
-                ],
-                [
-                    23,
-                    3,
-                    "PADRE COLL",
-                    0,
-                    1681778922
-                ],
-                [
-                    24,
-                    3,
-                    "SANTA MARÍA",
-                    0,
-                    1681778922
-                ],
-                [
-                    25,
-                    3,
-                    "EL CRUCE",
-                    0,
-                    1681778922
-                ],
-                [
-                    26,
-                    3,
-                    "MISIÓN AMBRICANA",
-                    0,
-                    1681778922
-                ],
-                [
-                    27,
-                    3,
-                    "LA MERCED",
-                    0,
-                    1681778922
-                ],
-                [
-                    28,
-                    3,
-                    "SAN LUIS",
-                    0,
-                    1681778922
-                ],
-                [
-                    29,
-                    3,
-                    "POZO EL TIGRE",
-                    0,
-                    1681778922
-                ],
-                [
-                    30,
-                    3,
-                    "SANTA VICTORIA",
-                    0,
-                    1681778922
-                ],
-                [
-                    31,
-                    3,
-                    "EL CAÑAVERAL",
-                    0,
-                    1681778922
-                ],
-                [
-                    32,
-                    3,
-                    "CAÑAVERAL B",
-                    0,
-                    1681778922
-                ],
-                [
-                    33,
-                    3,
-                    "LA PISTA",
-                    0,
-                    1681778922
-                ],
-                [
-                    34,
-                    3,
-                    "LA GRACIA",
-                    0,
-                    1681778922
-                ],
-                [
-                    35,
-                    3,
-                    "LA ESTRELLA",
-                    0,
-                    1681778922
-                ],
-                [
-                    36,
-                    3,
-                    "KILÓMETRO 2",
-                    0,
-                    1681778922
-                ],
-                [
-                    37,
-                    3,
-                    "MISIÓN LA PAZ",
-                    0,
-                    1681778922
-                ],
-                [
-                    38,
-                    3,
-                    "LA BOLSA",
-                    0,
-                    1681778922
-                ],
-                [
-                    39,
-                    3,
-                    "VERTIENTE",
-                    0,
-                    1681778922
-                ],
-                [
-                    40,
-                    3,
-                    "POZO EL TORO",
-                    0,
-                    1681778922
-                ],
-                [
-                    41,
-                    3,
-                    "LA CHINA",
-                    0,
-                    1681778922
-                ],
-                [
-                    42,
-                    3,
-                    "RANCHO ÑATO",
-                    0,
-                    1681778922
-                ],
-                [
-                    43,
-                    3,
-                    "NUEVA ESPERANZA",
-                    0,
-                    1681778922
-                ],
-                [
-                    44,
-                    3,
-                    "25 DE AGOSTO",
-                    0,
-                    1681778922
-                ],
-                [
-                    45,
-                    3,
-                    "URUKUPIÑA",
+                    1,
+                    "Otro",
                     0,
                     1681778922
                 ]
+               
             ]
         },
         {
@@ -6442,13 +6236,13 @@ export const datos={
                     "column": "nivel_acceso",
                     "value": "INT  NOT NULL"
                 },
-                {
-                    "column": "sql_deleted",
-                    "value": "BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1))"
-                },
-                {
+               {
                     "column": "last_modified",
                     "value": "INTEGER DEFAULT (strftime('%s', 'now'))"
+                },
+                 {
+                    "column": "sql_deleted",
+                    "value": "BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1))"
                 }
             ],
             "indexes": [
@@ -6461,159 +6255,15 @@ export const datos={
                     "name": "nivel_acceso",
                     "value": "`nivel_acceso` DESC"
                 }
+            ],"triggers": [
+                {
+                    "name": "usuarios_trigger_last_modified",
+                    "logic": "BEGIN     UPDATE usuarios SET last_modified= (strftime('%s', 'now')) WHERE id_usuario=OLD.id_usuario;  END",
+                    "condition": "FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified",
+                    "timeevent": "AFTER UPDATE ON"
+                }
             ],
-            "values": [
-                [
-                    1,
-                    "adesar",
-                    "b9c3b366242d777dfeea8c4a8621bf3c",
-                    "adesar@adesar.org.ar",
-                    "ADESAR",
-                    2,
-                    0,
-                    1681779229
-                ],
-                [
-                    2,
-                    "marcela",
-                    "25bf2c365f27d025963c112076ed7a87",
-                    "-",
-                    "Marcela Quispe",
-                    2,
-                    0,
-                    1681779229
-                ],
-                [
-                    3,
-                    "marisa",
-                    "e438d4969c839b982c4fcd32e7e97d45",
-                    "-",
-                    "Marisa Alvarez",
-                    2,
-                    0,
-                    1681779229
-                ],
-                [
-                    4,
-                    "sandra",
-                    "d2f0c294711426f440af6c188232e774",
-                    "-",
-                    "Sandra Martinez",
-                    2,
-                    0,
-                    1681779229
-                ],
-                [
-                    5,
-                    "luis",
-                    "9942646b0aa3851e149a1a0cddadf9f9",
-                    "-",
-                    "Luis Fochi",
-                    2,
-                    0,
-                    1681779229
-                ],
-                [
-                    6,
-                    "ppiorno",
-                    "f5d75b525eeda5f12e01af7258686985",
-                    "",
-                    "Pablo Piorno",
-                    1,
-                    0,
-                    1681779229
-                ],
-                [
-                    7,
-                    "mfernandez",
-                    "5936442fd1dd38b200f1f69811f33b66",
-                    "",
-                    "Mariana Fernandez",
-                    1,
-                    0,
-                    1681779229
-                ],
-                [
-                    8,
-                    "fcrudo",
-                    "58266a6ed9386318a4afdf356696fcaf",
-                    "",
-                    "Favio Crudo",
-                    1,
-                    0,
-                    1681779229
-                ],
-                [
-                    9,
-                    "aguilera",
-                    "b9c3b366242d777dfeea8c4a8621bf3c",
-                    "anasolguilera@yahoo.com.ar",
-                    "Analía Guilera",
-                    1,
-                    0,
-                    1681779229
-                ],
-                [
-                    10,
-                    "amanterola",
-                    "b602837f4a8f34e073fe27c574f73c38",
-                    "",
-                    "Alfredo Manterola",
-                    1,
-                    0,
-                    1681779229
-                ],
-                [
-                    11,
-                    "sfernandez",
-                    "5936442fd1dd38b200f1f69811f33b66",
-                    "",
-                    "Silvina Fernández",
-                    1,
-                    0,
-                    1681779229
-                ],
-                [
-                    12,
-                    "savila",
-                    "c915d24cb8da0b2c14e76213d27cf631",
-                    "-",
-                    "Susana Ávila",
-                    1,
-                    0,
-                    1681779229
-                ],
-                [
-                    14,
-                    "gustavo",
-                    "3b1e446b97ff04b8a6d0a537f9a188fa",
-                    "gustavo.iglesias40@gmail.com",
-                    "Iglesias",
-                    1,
-                    0,
-                    1681779229
-                ],
-                [
-                    15,
-                    "mariana",
-                    "c34784e0c11541b7fc631ebaeebe7e62",
-                    "",
-                    "Mariana Ocampo",
-                    1,
-                    0,
-                    1681779229
-                ],
-                [
-                    16,
-                    "karina",
-                    "0c96dd925dff593027e325fe45203055",
-                    "",
-                    "Karina Cardone",
-                    1,
-                    0,
-                    1681779229
-                ]
-            ]
+            
         },
         {
             "name": "antecedentes",

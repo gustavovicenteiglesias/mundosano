@@ -1,5 +1,5 @@
 export interface Etmis_Personas{
-    id_personas?:number;
+    id_persona?:number;
     id_etmi?:number;
     id_control?:number;
     confirmada?:number;
@@ -9,7 +9,7 @@ export interface Etmis_Personas{
 }
 
 export const InicialEtmis_Personas:Etmis_Personas={
-    id_personas:0,
+    id_persona:0,
     id_etmi:0,
     id_control:0,
     confirmada:0,

@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-
+import { BASE_URL } from '../utils/constantes';
 // Define los tipos para las respuestas y errores
 interface ApiResponse<T> {
   data: T;
@@ -13,7 +13,7 @@ interface ApiError {
 type ApiResponseWrapper<T> = AxiosResponse<ApiResponse<T>>;
 
 // Define la URL base de tu API
-const BASE_URL = 'https://areco.gob.ar:9535/api';
+
 
 export async function get<T>(url: string): Promise<T> {
     const apiUrl = `${BASE_URL}${url}`;

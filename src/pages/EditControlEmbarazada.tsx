@@ -465,7 +465,7 @@ const EditControlEmbrazada: React.FC = () => {
             }
 
             let newEtmisPersonas: Etmis_Personas = {
-                confirmada: 1,
+                confirmada: 0,
                 sql_deleted: 0,
                 last_modified: Math.floor(new Date().getTime() / 1000)
             }
@@ -500,7 +500,7 @@ const EditControlEmbrazada: React.FC = () => {
 
                 if (control.resp_sifilis === "P") {
                     newEtmisPersonas = {
-                        id_personas: paciente.data.id_persona,
+                        id_persona: paciente.data.id_persona,
                         id_etmi: 3,
                         id_control: paciente.data.id_control,
                         confirmada: 1,
@@ -556,7 +556,7 @@ const EditControlEmbrazada: React.FC = () => {
 
                 if (control.resp_sifilis === "P") {
                     newEtmisPersonas = {
-                        id_personas: paciente.data.id_persona,
+                        id_persona: paciente.data.id_persona,
                         id_etmi: 2,
                         id_control: paciente.data.id_control,
                         confirmada: 1,
@@ -615,7 +615,7 @@ const EditControlEmbrazada: React.FC = () => {
 
                 if (control.resp_chagas === "P") {
                     newEtmisPersonas = {
-                        id_personas: paciente.data.id_persona,
+                        id_persona: paciente.data.id_persona,
                         id_etmi: 1,
                         id_control: paciente.data.id_control,
                         confirmada: 1,
@@ -670,7 +670,7 @@ const EditControlEmbrazada: React.FC = () => {
 
                 if (control.resp_vhb === "P") {
                     newEtmisPersonas = {
-                        id_personas: paciente.data.id_persona,
+                        id_persona: paciente.data.id_persona,
                         id_etmi: 4,
                         id_control: paciente.data.id_control,
                         confirmada: 1,

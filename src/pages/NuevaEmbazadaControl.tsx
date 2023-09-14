@@ -209,7 +209,7 @@ const NuevaEmbarazadaControl: React.FC = () => {
         const laboratorios: any = {};
         //laboratorios.sifilis
         //Insert tabla personas
-
+ 
         let ultimo_id_persona = await repositoryPersonas.getLastRowId("id_persona") //consulta(`SELECT id_persona FROM personas WHERE id_persona BETWEEN  ${minimo} AND ${maximo} ORDER BY id_persona DESC LIMIT 1`)
         const newPersona:Personas={
             id_persona: ultimo_id_persona + 1,
@@ -426,10 +426,10 @@ const NuevaEmbarazadaControl: React.FC = () => {
         }
 
         const newEtmisPersonas:Etmis_Personas={
-            id_personas: ultimo_id_persona,
+            id_persona: ultimo_id_persona,
             id_etmi: 3,
             id_control: ultimo_id_control,
-            confirmada: 1,
+            confirmada: 0,
             sql_deleted: 0,
             last_modified: Math.floor(new Date().getTime() / 1000),
             //usuario_modified: currentuser?.id_usuario===undefined?0:currentuser.id_usuario
