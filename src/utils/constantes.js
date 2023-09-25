@@ -1,3 +1,3 @@
-const NOMBRE_BB_DD="elsoberbio";
-const BASE_URL = 'https://api.elsoberbio.unsada.edu.ar/api';
+const NOMBRE_BB_DD="triplefrontera";
+const BASE_URL = 'https://areco.gob.ar:9535/api';
 export{NOMBRE_BB_DD,BASE_URL}
