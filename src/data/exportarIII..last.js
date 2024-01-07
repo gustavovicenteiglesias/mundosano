@@ -2340,7 +2340,7 @@ export const datos={
                 [
                     1,
                     12,
-                    "EL Soberbio",
+                    "Pampa del Indio",
                     0,
                     1681778592
                 ]
@@ -5398,112 +5398,77 @@ export const datos={
                 [
                     1,
                     1,
-                    "Aldea Itaomirí",
+                    "10 de Mayo",
                     0,
                     1681778922
                 ],
                 [
                     2,
                     1,
-                    "Aldea Jejy",
+                    "Lote 4 B",
                     0,
                     1681778922
                 ],
                 [
                     3,
                     1,
-                    "Aldea JejyMiri",
+                    "Campo Alemany",
                     0,
                     1681778922
                 ],
                 [
                     4,
                     1,
-                    "Aldea Pindo Poty",
+                    "Pampa Chica",
                     0,
                     1681778922
                 ],
                 [
                     7,
                     1,
-                    "Aldea Pindoty",
+                    "Cuarta Legua",
                     0,
                     1681778922
                 ],
                 [
                     8,
                     1,
-                    "Aldea Tacoayma",
+                    "Lote 4",
                     0,
                     1681778922
                 ],
                 [
                     9,
                     1,
-                    "Aldea Yriapy",
+                    "Campo Medina",
                     0,
                     1681778922
                 ],
                 [
                     10,
                     1,
-                    "CAPS Cristal",
+                    "Campo Nuevo",
                     0,
                     1681778922
                 ],
                 [
                     11,
                     1,
-                    "CAPS Chafaris",
+                    "Fortín Brown",
                     0,
                     1681778922
                 ],
                 [
                     12,
                     1,
-                    "CAPS El Paraíso",
+                    "Pampa Grande",
                     0,
                     1681778922
                 ],
                 [
                     13,
                     1,
-                    "CAPS Km 18",
-                    0,
-                    1681778922
-                ],
-                [
-                    14,
-                    1,
-                    "CAPS La Flor",
-                    0,
-                    1681778922
-                ],
-                [
-                    15,
-                    1,
-                    "CAPS Mariano Moreno",
-                    0,
-                    1681778922
-                ],
-                [
-                    16,
-                    1,
-                    "CAPS Monteagudo",
-                    0,
-                    1681778922
-                ],
-                [
-                    17,
-                    1,
-                    "Hospital",
-                    0,
-                    1681778922
-                ],
-                [
-                    18,
-                    1,
-                    "Otro",
+                    "Cancha Larga",
                     0,
                     1681778922
                 ]

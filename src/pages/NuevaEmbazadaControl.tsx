@@ -293,7 +293,7 @@ const NuevaEmbarazadaControl: React.FC = () => {
         let insert_fecha_ultimo_embarazo = paciente?.control.fecha_ultimo_embarazo === null || paciente?.control.fecha_ultimo_embarazo === "null" ? null :  paciente?.control.fecha_ultimo_embarazo 
         let insertfpp=paciente.control?.fpp === null ? null : moment(paciente.control.fpp).format("YYYY-MM-DD")
         const newAntecedentes:Antecedentes={
-            id_antecedente: ultimo_id_antecedentes+1,
+            id_antecedente: ultimo_id_antecedentes+1, 
             id_persona: ultimo_id_persona,
             id_control: ultimo_id_control,
             edad_primer_embarazo: Number(paciente.control.edad_primer_embarazo),

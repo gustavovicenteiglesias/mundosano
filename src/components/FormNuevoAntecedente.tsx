@@ -53,7 +53,7 @@ interface persona {
     formLLeno?: boolean
 
 }
-const FormNuevaEmbAtecedentes: React.FC<any> = ({ datos }) => {
+const FormNuevoAtecedentes: React.FC<any> = ({ datos }) => {
     const [datapicker, setDataPicker] = useState<boolean>(false)
     const [datapicker1, setDataPicker1] = useState<boolean>(false)
     const [datapicker2, setDataPicker2] = useState<boolean>(false)
@@ -64,83 +64,15 @@ const FormNuevaEmbAtecedentes: React.FC<any> = ({ datos }) => {
     const [error, setError] = useState<string>("")
     const [isLoading, setLoading] = useState<boolean>(false)
 
-    const repositoryAntecedentesApps= new Repository<Antecedentes_Apps>("antecedentes_apps");
-    const repositoryAntecedentesMacs= new Repository<Antecedentes_Macs>("antecedentes_macs");
-    const repositoryAntecedentes=new Repository<Antecedentes>("antecedentes")
-    const repositoryApps=new Repository<Apps>("apps");
-    const repositoryMacs=new Repository<Macs>("macs");
+    const repositoryAntecedentesApps = new Repository<Antecedentes_Apps>("antecedentes_apps");
+    const repositoryAntecedentesMacs = new Repository<Antecedentes_Macs>("antecedentes_macs");
+    const repositoryAntecedentes = new Repository<Antecedentes>("antecedentes")
+    const repositoryApps = new Repository<Apps>("apps");
+    const repositoryMacs = new Repository<Macs>("macs");
 
     const history = useHistory()
     const ref = useRef("")
-    const GuardarOnSutmit = async (data: antecedentes): Promise<any> => {
-        try {
-            
-            let update_fecha_ultimo_embarazo = data.fecha_ultimo_embarazo === null || data.fecha_ultimo_embarazo === "null" ? null :  data.fecha_ultimo_embarazo 
-            let update_fum = data?.fum === null || data?.fum === "null" ? null : data.fum 
-            let update_fpp = data?.fpp === null || data?.fpp === "null" ? null : data.fpp 
 
-            let newAntecedentes:Antecedentes={
-                
-                edad_primer_embarazo:Number(data.edad_primer_embarazo) ,
-                fecha_ultimo_embarazo: update_fecha_ultimo_embarazo,
-                gestas:data.gestas,
-                partos: data.partos,
-                cesareas: data.cesareas,
-                abortos: data.abortos,
-                planificado: data.planificado,
-                fum: update_fum,
-                fpp: update_fpp,
-                last_modified: Math.floor(new Date().getTime() / 1000),
-                sql_deleted: 0
-            }
-            let res: any = await repositoryAntecedentes.update(newAntecedentes,"id_antecedente",Number(data.id_antecedente))
-            if(res)console.log("Se actualizo antecedentes")
-
-            if (datos.antecedentes.id_app === null) {
-                console.log("@@@@@data" + datos.antecedentes.id_app)
-                console.log("@@@@@datammm" + data.id_app)
-                let newAntecedentesApps:Antecedentes_Apps={
-                    id_antecedente:Number(data.id_antecedente) ,
-                    id_app: 10,
-                    sql_deleted: 0,
-                    last_modified: Math.floor(new Date().getTime() / 1000)
-                }
-                let insert_ante = datos.id_app === data.id_app ? null : await repositoryAntecedentesApps.create(newAntecedentesApps);
-                
-            } else {
-                let newAntecedentesApps:Antecedentes_Apps={
-                    id_antecedente:Number(data.id_antecedente) ,
-                    id_app:Number(data.id_app),
-                    sql_deleted: 0,
-                    last_modified: Math.floor(new Date().getTime() / 1000)
-                    }
-                const res_app_antecedentes = data.id_app !== null ? await repositoryAntecedentesApps.update(newAntecedentesApps,"id_antecedente",Number(data.id_antecedente)): null
-               }
-
-            if (datos.antecedentes.id_mac === null) {
-                let newAntecedentesMacs:Antecedentes_Macs={
-                    id_antecedente: Number(data.id_antecedente),
-                    id_mac: 6,
-                    sql_deleted: 0,
-                    last_modified: Math.floor(new Date().getTime() / 1000)
-                }
-                let insert_antes = datos.id_mac === data.id_mac ? null : await repositoryAntecedentesMacs.create(newAntecedentesMacs)
-            } else {
-                let newAntecedentesMacs:Antecedentes_Macs={
-                    id_antecedente: Number(data.id_antecedente),
-                    id_mac: Number(data.id_mac),
-                    sql_deleted: 0,
-                    last_modified: Math.floor(new Date().getTime() / 1000)
-                }
-                let res_mac_antecedentes = data.id_mac !== null ? await repositoryAntecedentesMacs.update(newAntecedentesMacs,"id_antecedente",Number(data.id_antecedente)):null
-              }
-
-            return true;
-        }
-        catch (error: any) {
-            return false;
-        }
-    }
 
     const fechaNacimiento = (e: any) => {
         const dia = moment(e.detail.value).format("YYYY-MM-DD")
@@ -188,16 +120,13 @@ const FormNuevaEmbAtecedentes: React.FC<any> = ({ datos }) => {
 
     const onSubmit = (e: any) => {
         e.preventDefault()
-
-
-
-
-
-        if (ante?.abortos !== undefined && ante?.cesareas !== undefined && ante?.partos !== undefined && ante?.gestas !== undefined) {
+        console.log("paso")
+       
             if ((Number(ante?.abortos) + Number(ante?.cesareas) + Number(ante?.partos)) > (Number(ante?.gestas) - 1)) {
-
+                console.log("paso if")
                 setError("La suma de abortos , cesareas y partos no puede superar la cantidad de gestaciones ")
             } else {
+                console.log("paso else")
                 let data_antecedentes = ante;
 
                 data_antecedentes.fecha = new Date()
@@ -207,38 +136,27 @@ const FormNuevaEmbAtecedentes: React.FC<any> = ({ datos }) => {
                 } else {
                     data_antecedentes.planificado = 0
                 }
-                //let persona = paciente
-                // persona.antecedentes=data_antecedentes
-                GuardarOnSutmit(data_antecedentes)
-                .then(()=>{
-                    setError("")
-                    history.push("/personas")
-                })
-
-                
-               
-
-                   
-                    //window.location.reload()
-               
+                console.log("CCONTROL ANTECEDENTE ", data_antecedentes)
+                history.push({ pathname: "/nuevocontrol", state: { control: data_antecedentes, paciente: paciente } })
+                setError("")
             }
-        }
+        
     }
 
-   
+
     useEffect(() => {
 
         const testDatabaseCopyFromAssets = async (): Promise<any> => {
             try {
-                
-               
+
+
                 let res: any = await repositoryMacs.getAll();
-                console.log("Macs "+JSON.stringify(res))
+                console.log("Macs " + JSON.stringify(res))
                 setMacs(res)
                 let resAPP: any = await repositoryApps.getAll();
-                console.log("Apps "+JSON.stringify(resAPP))
+                console.log("Apps " + JSON.stringify(resAPP))
                 setApps(resAPP)
-              
+
                 return true;
             }
             catch (error: any) {
@@ -248,14 +166,21 @@ const FormNuevaEmbAtecedentes: React.FC<any> = ({ datos }) => {
         testDatabaseCopyFromAssets()
     }, [])
     useEffect(() => {
-        setAnte(datos.antecedentes)
+
+        setAnte({
+            ...datos.antecedentes,
+            gestas: Number(datos.antecedentes.gestas + 1),
+            fpp: null,
+            fum: null,
+            fecha_ultimo_embarazo: datos.antecedentes.fpp
+        })
         setPaciente(datos)
     }, [])
 
     useEffect(() => {
 
     }, [error])
-    console.log("datos "+JSON.stringify(datos))
+    // console.log("datos "+JSON.stringify(datos))
     console.log("ante   " + JSON.stringify(ante))
     return (
         <IonContent>
@@ -271,7 +196,7 @@ const FormNuevaEmbAtecedentes: React.FC<any> = ({ datos }) => {
                         <IonItem>
                             <IonLabel position="stacked">Fecha de último parto</IonLabel>
                             {/* <IonInput onClick={() => setDataPicker(true)} name="fecha_ultimo_embarazo" value={ante?.fecha_ultimo_embarazo}></IonInput>*/}
-                            
+
                             {ante?.fecha_ultimo_embarazo === null || ante?.fecha_ultimo_embarazo === "null" ? <IonButton onClick={() => setDataPicker(true)} size="small" slot="end">Fecha Último Embarazo</IonButton> : <IonDatetimeButton datetime="datetimeultimo" slot="end"></IonDatetimeButton>}
                             <IonModal keepContentsMounted={true} isOpen={datapicker} className="ion-datetime-button-overlay" onDidDismiss={() => setDataPicker(false)}>
                                 <IonDatetime
@@ -369,7 +294,7 @@ const FormNuevaEmbAtecedentes: React.FC<any> = ({ datos }) => {
                             {ante?.fum === null || ante?.fum === "null" ? <IonButton onClick={(e) => setDataPicker1(true)} size="small" slot="end">Fum</IonButton> : <IonDatetimeButton datetime="datetimeeditarfum" slot="end"></IonDatetimeButton>}
                             <IonModal keepContentsMounted={true} isOpen={datapicker1} className="ion-datetime-button-overlay" onDidDismiss={(e) => setDataPicker1(false)}>
                                 <IonDatetime
-                                
+
                                     id="datetimeeditarfum"
                                     name="fum"
                                     onIonChange={(e) => fecha_FUM(e)}
@@ -382,7 +307,7 @@ const FormNuevaEmbAtecedentes: React.FC<any> = ({ datos }) => {
                                     value={ante?.fum}
                                     onIonCancel={(e) => setDataPicker1(false)}
                                 >
-  
+
                                 </IonDatetime>
                             </IonModal>
 
@@ -424,4 +349,4 @@ const FormNuevaEmbAtecedentes: React.FC<any> = ({ datos }) => {
         </IonContent>
     )
 }
-export default FormNuevaEmbAtecedentes
+export default FormNuevoAtecedentes

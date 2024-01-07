@@ -11,7 +11,8 @@ import { sqlite, existingConn, db } from "../App"
 import { SQLiteDBConnection } from "react-sqlite-hook";
 import { CargarBase } from '../data/CargarBase';
 import { Network } from '@capacitor/network';
-import { NOMBRE_BB_DD ,BASE_URL} from '../utils/constantes';
+import { NOMBRE_BB_DD, BASE_URL } from '../utils/constantes';
+import { useHistory } from 'react-router';
 
 
 const Main: React.FC<any> = () => {
@@ -21,30 +22,33 @@ const Main: React.FC<any> = () => {
     const [colorLogo, setColorLogo] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
     const [loadindImport, setLoadingImport] = useState<boolean>(false);
-    const [hayInternet,setHayInternet]=useState<boolean>(true)
-
+    const [hayInternet, setHayInternet] = useState<boolean>(true)
+    const history = useHistory();
     Network.addListener('networkStatusChange', status => {
         console.log('Network status changed', status);
-        if(status.connected){
+        if (status.connected) {
             setHayInternet(true)
-        }else{
+        } else {
             setHayInternet(false)
         }
-      });
+    });
 
     const logCurrentNetworkStatus = async () => {
         const status = await Network.getStatus();
-        if(status.connected){
+        if (status.connected) {
             setHayInternet(true)
-        }else{
+        } else {
             setHayInternet(false)
         }
         console.log('Network status:', status);
-      };
-      useEffect(()=>{
+    };
+    
+    useEffect(() => {
         logCurrentNetworkStatus()
-            },[])
+    }, [])
+   
 
+    
     const dbdb = async () => {
         const ret = await sqlite.checkConnectionsConsistency();
         const isConn = (await sqlite.isConnection(NOMBRE_BB_DD)).result;
@@ -99,13 +103,13 @@ const Main: React.FC<any> = () => {
             return false;
         }
     }
-  
+
 
 
     const exportJsontoApi = async () => {
         const db = await dbdb()
         setLoading(true)
-        axios.post(BASE_URL+"/sqlite", data)
+        axios.post(BASE_URL + "/sqlite", data)
             .then(async (resp) => {
 
                 setLoading(false)
@@ -123,7 +127,7 @@ const Main: React.FC<any> = () => {
                     }
 
                     console.log(`fecha ${de}`)
-                    axios.post(BASE_URL+"/sync_date", datos)
+                    axios.post(BASE_URL + "/sync_date", datos)
                     setColorLogo(true)
                 } else {
                     setColorLogo(false)
@@ -131,7 +135,7 @@ const Main: React.FC<any> = () => {
             })
     }
 
-    
+
     // Función genérica para combinar los valores de los arrays con las interfaces
     function combinarValores<T extends object>(interfaz: T, arrays: any[][]): T[] {
         return arrays.map((elemento) => {
@@ -145,26 +149,26 @@ const Main: React.FC<any> = () => {
 
 
     const nuevaBBDD = async () => {
-      
+
         const db = await dbdb()
-            let borrar: any = await db.delete()
-            console.log("se borro")
-            let existe: any = await sqlite.isDatabase(NOMBRE_BB_DD)
-            console.log(`Existe ${JSON.stringify(existe)}`)
-    
-            if (!existe.result) {
-                setLoadingImport(true)
-                console.log("CARGAR BASE NUEVA RRRRRRRRRR")
-               const rescargar=await CargarBase()
-               .then((resp)=>{
-                
-               setLoadingImport(false)
-               })
-               
-               
-            }
-    
-       
+        let borrar: any = await db.delete()
+        console.log("se borro")
+        let existe: any = await sqlite.isDatabase(NOMBRE_BB_DD)
+        console.log(`Existe ${JSON.stringify(existe)}`)
+
+        if (!existe.result) {
+            setLoadingImport(true)
+            console.log("CARGAR BASE NUEVA RRRRRRRRRR")
+            const rescargar = await CargarBase()
+                .then((resp) => {
+
+                    setLoadingImport(false)
+                })
+
+
+        }
+
+
 
     }
     return (
@@ -192,9 +196,9 @@ const Main: React.FC<any> = () => {
 
                             </div>
                             <IonButton expand='block' routerLink="/personas" color="secondary" className='button_css'>Continuar</IonButton>
-                            {hayInternet&&<IonButton onClick={() => exportJson()} expand='block' color="secondary" className='button_css'>Exportar</IonButton>}
-                           { /*<IonButton onClick={() => importJson()} expand='block' color="secondary" className='button_css'>Importar</IonButton>*/}
-                           {hayInternet&&<IonButton onClick={() => nuevaBBDD()} expand='block' color="secondary" className='button_css' disabled={loadindImport}>{loadindImport?"Importando":"Importar"}</IonButton>}
+                            {hayInternet && <IonButton onClick={() => exportJson()} expand='block' color="secondary" className='button_css'>Exportar</IonButton>}
+                            { /*<IonButton onClick={() => importJson()} expand='block' color="secondary" className='button_css'>Importar</IonButton>*/}
+                            {hayInternet && <IonButton onClick={() => nuevaBBDD()} expand='block' color="secondary" className='button_css' disabled={loadindImport}>{loadindImport ? "Importando" : "Importar"}</IonButton>}
                             {hiddenFecha && <IonItem onClick={() => exportJsontoApi()}>
                                 <IonLabel className="ion-text-wrap">Tu ultima actualizacíon es del dia {moment(fechaActualizacion).format("YYYY-MM-DD")}</IonLabel>
 

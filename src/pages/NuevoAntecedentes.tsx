@@ -4,10 +4,11 @@ import { animationBuilder } from "../components/AnimationBuilder"
 import { useHistory, useLocation } from "react-router"
 import FormNuevaEmbAtecedentes from "../components/FormNuevaEmbAntecedentes"
 import { useState } from "react"
+import FormNuevoAtecedentes from "../components/FormNuevoAntecedente"
 
 
 
-const NuevaEmbarazadaAntecedentes:React.FC=()=>{
+const NuevoAntecedentes:React.FC=()=>{
     const location = useLocation();
     const [paciente, setPaciente] = useState<any>(location.state);
     const history=useHistory()
@@ -23,8 +24,8 @@ const NuevaEmbarazadaAntecedentes:React.FC=()=>{
                    <IonLabel >Antecedentes de {paciente?.nombre} {paciente?.apellido}</IonLabel>
                 </IonToolbar>
             </IonHeader>
-            <FormNuevaEmbAtecedentes persona={paciente}></FormNuevaEmbAtecedentes>
+            <FormNuevoAtecedentes datos={paciente}></FormNuevoAtecedentes>
         </IonPage>
     )
 }
-export default NuevaEmbarazadaAntecedentes
+export default NuevoAntecedentes
