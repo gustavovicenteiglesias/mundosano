@@ -137,7 +137,8 @@ const FormNuevoAtecedentes: React.FC<any> = ({ datos }) => {
                     data_antecedentes.planificado = 0
                 }
                 console.log("CCONTROL ANTECEDENTE ", data_antecedentes)
-                history.push({ pathname: "/nuevocontrol", state: { control: data_antecedentes, paciente: paciente } })
+                history.replace({state:null})
+                history.push({ pathname: "/nuevoembarazocontrol", state: { control: data_antecedentes, paciente: paciente } })
                 setError("")
             }
         

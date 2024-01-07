@@ -39,6 +39,7 @@ import EditarAntecedentes from './pages/EditarAntecedentes';
 import { CargarBase } from './data/CargarBase';
 import { NOMBRE_BB_DD } from './utils/constantes';
 import NuevoAntecedentes from './pages/NuevoAntecedentes';
+import NuevoEmbarazadaControl from './pages/NuevoEmbarazoControl';
 
 
 interface JsonListenerInterface {
@@ -182,6 +183,9 @@ const App: React.FC = () => {
           </Route>
           <Route exact path="/editantecedentes">
             {showEdituser || showReaduser ? <EditarAntecedentes/> : <Home />}
+          </Route>
+          <Route exact path="/nuevoembarazocontrol">
+            {showEdituser || showReaduser ? <NuevoEmbarazadaControl/> : <Home />}
           </Route>
           <Route exact path="/">
             <Redirect to="/home" />

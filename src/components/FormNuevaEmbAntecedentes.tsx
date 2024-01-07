@@ -130,7 +130,7 @@ const FormNuevaEmbAtecedentes: React.FC<antecedentesPersona> = (persona) => {
                 } else {
                     data_antecedentes.planificado = 0
                 }
-
+                history.replace({state:null})
                 history.push({ pathname: "/nuevaembarazadacontrol", state: { control: data_antecedentes, paciente: paciente } })
                 setError("")
             }
