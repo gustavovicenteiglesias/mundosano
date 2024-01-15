@@ -75,6 +75,7 @@ const NuevoEmbarazadaControl: React.FC = () => {
     const [isLoading, setLoading] = useState<boolean>(false)
     const [motivos, setMotivos] = useState<any>([])
     const [currentuser,setCurrentUser]=useState<Usuarios>()
+    const [edadGestacional, setEdadGestacional] = useState<any>()
 
     const repositoryMotivosControl=new Repository<MotivoDeDerivacion>("motivos_derivacion");
     const repositoryPersonas=new Repository<Personas>("personas");
@@ -95,7 +96,11 @@ const NuevoEmbarazadaControl: React.FC = () => {
     let history = useHistory()
     useEffect(() => {
         if (paciente.control?.fum !== null) {
-            setControl((prevProps: any) => ({ ...prevProps, gestas: hoy.diff(paciente.control?.fum, "weeks") }));
+            setEdadGestacional(hoy.diff(paciente.control?.fum, "weeks"));
+        }else if (paciente.control?.fpp !== null){
+            setEdadGestacional((hoy.diff(paciente.control?.fpp, "weeks"))+40);
+        }else{
+            setEdadGestacional(0);
         }
 
     }, [])
@@ -108,6 +113,7 @@ const NuevoEmbarazadaControl: React.FC = () => {
             }
             
     },[])
+
 
     useIonViewWillEnter(() => {
        
@@ -127,7 +133,9 @@ const NuevoEmbarazadaControl: React.FC = () => {
 
 
 
-
+    const handleEdadGestacional=(e:any)=>{
+        setEdadGestacional(e.target.value);
+    }
     const handleInputChange = (e: any) => {
         const { name, value } = e.target;
         setControl((prevProps: any) => ({ ...prevProps, [name]: value }));
@@ -187,7 +195,7 @@ const NuevoEmbarazadaControl: React.FC = () => {
 
         /*Tabla control_embarazo */
         const control_embarazo: any = {};
-        control_embarazo.edad_gestacional = control.gestas;
+        control_embarazo.edad_gestacional = edadGestacional;
         if (control.ecografia === "S") {
             control_embarazo.eco = "S"
         } else {
@@ -509,14 +517,30 @@ const NuevoEmbarazadaControl: React.FC = () => {
 
                         }}>
                     <IonItem>
-                        <IonLabel position="floating">Edad Gestacional (FUM {moment(paciente.control?.fum).format("LL")})</IonLabel>
-                        <IonInput type="number" defaultValue={diferencia} value={control?.gestas} name="gestas" onIonChange={e => handleInputChange(e)} ></IonInput>
+                    <IonLabel position="floating">Edad Gestacional ({edadGestacional } Semanas )</IonLabel>
+                        <IonInput type="number"  value={edadGestacional} name="edad_gestacional" onIonChange={e => handleEdadGestacional(e)} ></IonInput>
                     </IonItem>
                      {/* === ION DATE TIME === */}
                      <IonItem>
                             <IonLabel position="stacked">{fecha1 === null || fecha1 === "null" ?"":"Fecha de Control"}</IonLabel>
-                            {fecha1 === null || fecha1 === "null" ? <IonButton onClick={(e) => setDataPicker(true)} size="small" >Fecha de Control</IonButton> : <IonDatetimeButton datetime="datetime" ></IonDatetimeButton>}
+                            {fecha1 === null || fecha1 === "null" ? <IonButton onClick={(e) => setDataPicker(true)} size="small" >Fecha de Control</IonButton> : <IonDatetimeButton datetime="datetime" defaultValue={fecha1}></IonDatetimeButton>}
+                            <IonModal keepContentsMounted={true} isOpen={datapicker} className="ion-datetime-button-overlay" onDidDismiss={() => setDataPicker(false)}>
+                                <IonDatetime
+                                    
+                                    id="datetime"
+                                    name="fecha_ultimocontrol"
+                                    onIonChange={(e) => setFecha1(e.target.value)}
+                                    presentation="date"
+                                    showDefaultButtons={true}
+                                    doneText="Confirmar"
+                                    showClearButton
+                                    cancelText="Cancelar"
+                                    clearText="Limpiar"
+                                    value={fecha1}
+                                    onIonCancel={() => setDataPicker(false)}
 
+                                />
+                            </IonModal>
                             
                         </IonItem>
                     {/* Ecografia */}
@@ -835,23 +859,7 @@ const NuevoEmbarazadaControl: React.FC = () => {
                             </IonItem>
                         </IonList>
                     </IonCard>
-                    <IonModal keepContentsMounted={true} isOpen={datapicker} onDidDismiss={(e) => setDataPicker(false)} className="ion-datetime-button-overlay">
-                        <IonDatetime
-                            id="datetime"
-                            name="fecha_control"
-                            onIonChange={(e) => fechaNacimiento(e)}
-                            presentation="date"
-                            showDefaultButtons={true}
-                            showClearButton
-                            doneText="Confirmar"
-                            cancelText="Cancelar"
-                            clearText="Limpiar"
-                            placeholder="fecha"
-                            onIonCancel={(e) => setDataPicker(false)}
-                            
-
-                        />
-                    </IonModal>
+                    
                     <IonButton expand="block" fill="outline" type="submit" disabled={isLoading}>{isLoading ? "Guardando" : "Guardar"}</IonButton>
                 </form>
             </IonContent>

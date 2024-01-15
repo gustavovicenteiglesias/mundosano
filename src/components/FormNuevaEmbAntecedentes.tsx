@@ -132,6 +132,7 @@ const FormNuevaEmbAtecedentes: React.FC<antecedentesPersona> = (persona) => {
                 }
                 history.replace({state:null})
                 history.push({ pathname: "/nuevaembarazadacontrol", state: { control: data_antecedentes, paciente: paciente } })
+                window.location.reload()
                 setError("")
             }
         }
