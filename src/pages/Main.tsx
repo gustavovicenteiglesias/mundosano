@@ -91,7 +91,7 @@ const Main: React.FC<any> = () => {
 
 
             }
-            console.log(JSON.stringify(res.export))
+            
 
 
             // setPaises(JSON.parse(res.values) )
@@ -113,7 +113,7 @@ const Main: React.FC<any> = () => {
             .then(async (resp) => {
 
                 setLoading(false)
-                console.log(resp.data.success)
+                
                 if (resp.data.success) {
                     await db.open();
                     const d = new Date();

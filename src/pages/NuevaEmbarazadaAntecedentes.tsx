@@ -12,7 +12,7 @@ const NuevaEmbarazadaAntecedentes:React.FC=()=>{
     const [paciente, setPaciente] = useState<any>(location.state);
     const history=useHistory()
     
-    console.log(location.state)
+    
     return(
         <IonPage>
             <IonHeader className="ion-no-border">

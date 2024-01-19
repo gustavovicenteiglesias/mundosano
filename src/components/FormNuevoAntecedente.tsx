@@ -120,13 +120,13 @@ const FormNuevoAtecedentes: React.FC<any> = ({ datos }) => {
 
     const onSubmit = (e: any) => {
         e.preventDefault()
-        console.log("paso")
+        
        
             if ((Number(ante?.abortos) + Number(ante?.cesareas) + Number(ante?.partos)) > (Number(ante?.gestas) - 1)) {
-                console.log("paso if")
+                
                 setError("La suma de abortos , cesareas y partos no puede superar la cantidad de gestaciones ")
             } else {
-                console.log("paso else")
+                
                 let data_antecedentes = ante;
 
                 data_antecedentes.fecha = new Date()
@@ -136,7 +136,7 @@ const FormNuevoAtecedentes: React.FC<any> = ({ datos }) => {
                 } else {
                     data_antecedentes.planificado = 0
                 }
-                console.log("CCONTROL ANTECEDENTE ", data_antecedentes)
+                
                 history.replace({state:null})
                 history.push({ pathname: "/nuevoembarazocontrol", state: { control: data_antecedentes, paciente: paciente } })
                 setError("")
@@ -181,8 +181,8 @@ const FormNuevoAtecedentes: React.FC<any> = ({ datos }) => {
     useEffect(() => {
 
     }, [error])
-    // console.log("datos "+JSON.stringify(datos))
-    console.log("ante   " + JSON.stringify(ante))
+    
+    
     return (
         <IonContent>
             <form onSubmit={(e) => onSubmit(e)}>

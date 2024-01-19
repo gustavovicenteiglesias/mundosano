@@ -89,7 +89,7 @@ const EditControlEmbrazada: React.FC = () => {
     
     const handleInputChange = (e: any) => {
         const { name, value } = e.target;
-        console.log(e.target)
+        
         setControl((prevProps: any) => ({ ...prevProps, [name]: value }));
     }
 
@@ -102,7 +102,7 @@ const EditControlEmbrazada: React.FC = () => {
         const testDatabaseCopyFromAssets = async (): Promise<any> => {
             try {
                 let res: any = await repositoryMotivosDerivacion.getAll()
-                console.log("Motivos " + JSON.stringify(res))
+                
                 setMotivos(res)
                 return true;
             }
@@ -117,8 +117,6 @@ const EditControlEmbrazada: React.FC = () => {
         //update edad gestacional 
         setControl(datos?.data.data.controlembarazada)
         
-        console.log("edadgestacional", hoy.diff(datos.data.paciente.antecedentes.fpp, 'weeks')+40)
-        console.log(datos.data.paciente.antecedentes.fpp)
         
         setPaciente(datos?.data)
         
@@ -259,15 +257,15 @@ const EditControlEmbrazada: React.FC = () => {
         if (datos?.data.paciente.antecedentes.fum !== null) {
             contolemb.edad_gestacional= hoy.diff(datos?.data.paciente.antecedentes.fum, "weeks") ;
             setEdadGestacional(hoy.diff(datos?.data.paciente.antecedentes.fum, "weeks"))
-            console.log("elseif")
+            
         }else if(datos.data.paciente.antecedentes.fpp !== null){
             setEdadGestacional((hoy.diff(datos?.data.paciente.antecedentes?.fpp, 'weeks')+40))
-            console.log("elseif")
+            
            
         }
         
         else {
-            console.log("eslse")
+            
            contolemb.edad_gestacional= 0;
            setEdadGestacional(contolemb.edad_gestacional)
         }
@@ -885,16 +883,13 @@ const EditControlEmbrazada: React.FC = () => {
             }
         }
 
-        //console.log("@@@@@@control " + JSON.stringify(control))
+        
        
     }
 
 
 
-    console.log(datos)
-    //console.log("esdad gestacional",edadGestacional)
-    //console.log(datos?.data.data.fecha)
-    console.log(hoy.format("YYYY-MM-DD"))
+   
     return (
         <>
             <IonPage>

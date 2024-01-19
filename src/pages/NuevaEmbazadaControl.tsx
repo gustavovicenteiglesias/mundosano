@@ -90,8 +90,7 @@ const NuevaEmbarazadaControl: React.FC = () => {
     const repositoryEtmisPersonas=new Repository<Etmis_Personas>("etmis_personas")
 
     const hoy = moment()
-    // const fum = moment(paciente.control?.fum)
-    // console.log("fum" +paciente.control?.fum)
+   
     
     let history = useHistory()
     useEffect(() => {
@@ -322,7 +321,7 @@ const NuevaEmbarazadaControl: React.FC = () => {
         if(insertAntecedentes )console.log("Insertar antecedentes")
 
         //si hay macs insertar en la tabla de antecedentes_apps
-        console.log("paciente control app "+paciente.control.app)
+        
         ultimo_id_antecedentes =Number(newAntecedentes.id_antecedente) 
         const newAntecedentesApss:Antecedentes_Apps={
             id_antecedente: ultimo_id_antecedentes,
@@ -553,7 +552,7 @@ const NuevaEmbarazadaControl: React.FC = () => {
      
     }
 
-    console.log(fecha1)
+    
    
 
     return (

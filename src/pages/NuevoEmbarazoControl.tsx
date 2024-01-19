@@ -90,8 +90,7 @@ const NuevoEmbarazadaControl: React.FC = () => {
     const repositoryEtmisPersonas=new Repository<Etmis_Personas>("etmis_personas")
 
     const hoy = moment()
-    // const fum = moment(paciente.control?.fum)
-    // console.log("fum" +paciente.control?.fum)
+    
     
     let history = useHistory()
     useEffect(() => {

@@ -91,7 +91,7 @@ const NuevoControl: React.FC = () => {
 
      
     let history = useHistory()
-    //console.log("FUM "+paciente?.antecedentes?.fum)
+    
     useEffect(() => {
         if (paciente?.antecedentes?.fum !== null) {
             setControl((prevProps: any) => ({ ...prevProps, gestas: hoy.diff(paciente?.antecedentes?.fum, "weeks") }));
@@ -453,7 +453,7 @@ const NuevoControl: React.FC = () => {
     }
 
 
-    console.log("@@@@@@control " + JSON.stringify(paciente))
+   
 
     return (
         <IonPage>

@@ -180,7 +180,7 @@ const DetallePaciente: React.FC = () => {
                 break;
         }
     }
-    console.log("@@@@@ paciente" + JSON.stringify(paciente))
+    
 
     const handleColor = (data: any): string => {
         switch (data) {
