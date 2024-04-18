@@ -17,6 +17,9 @@ import { SQLiteDBConnection } from "react-sqlite-hook";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content';
 import { BASE_URL, NOMBRE_BB_DD } from "../utils/constantes";
+import { InicialPaises, Paises } from "../models/Paises";
+import { Areas, InicialAreas } from "../models/Areas";
+import { InicialParajes, Parajes } from "../models/Parajes";
 
 const query=`DROP TRIGGER "control_embarazo_trigger_last_modified";
 CREATE TRIGGER control_embarazo_trigger_last_modified AFTER UPDATE ON control_embarazo FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified BEGIN UPDATE control_embarazo SET last_modified = (strftime('%s','now')) WHERE id_control_embarazo=OLD.id_control_embarazo; END;
@@ -97,6 +100,9 @@ export async function CargarBase (){
     const repositoryLaboratoriosRealizados = new Repository<Laboratorios_Realizados>("laboratorios_realizados")
     const repositoryEtmisPersonas = new Repository<Etmis_Personas>("etmis_personas")
     const repositoryUsuarios = new Repository<Usuarios>("usuarios")
+    const repositoryPaises=new  Repository<Paises>('paises');
+    const repositoryAreas=new   Repository<Areas>('areas');
+    const repositoryParajes=new Repository<Parajes>('parajes')
 
     //
     const MySwal = withReactContent(Swal)
@@ -114,7 +120,10 @@ export async function CargarBase (){
         antecedentes_apps: [],
         antecedentes_macs: [],
         etmis_personas: [],
-        usuarios:[]
+        usuarios:[],
+        paises:[],
+        areas: [],
+        parajes:[],
     };
     try {
         await axios.get(BASE_URL+"/data/json3")
@@ -138,7 +147,10 @@ export async function CargarBase (){
             const antecedentes_macs: Antecedentes_Macs[] = combinarValores<Antecedentes_Macs>(InicialAntecedentes_Macs, valores.antecedentes_macs);
             const etmis_personas: Etmis_Personas[] = combinarValores<Etmis_Personas>(InicialEtmis_Personas, valores.etmis_personas);
             const laboratoriosRealizados:Laboratorios_Realizados[]=combinarValores<Laboratorios_Realizados>(InicialLaboratorios,valores.laboratorios_realizados)
-            const usuario:Usuarios[]=combinarValores<Usuarios>(InitialUsuario,valores.usuarios)
+            const usuario:Usuarios[]=combinarValores<Usuarios>(InitialUsuario,valores.usuarios);
+            const area:Areas[]=combinarValores<Areas>(InicialAreas,valores.areas);
+            const paises:Paises[]=combinarValores<Paises>(InicialPaises,valores.paises);
+            const parajes:Parajes[]=combinarValores<Parajes>(InicialParajes,valores.parajes);
             
             await repositoryPersonas.insert(persona)
                 .then(async (resp) => {
@@ -173,23 +185,35 @@ export async function CargarBase (){
                                                                                         await repositoryUsuarios.insert(usuario)
                                                                                         .then(async(resp)=>{
                                                                                             console.log("Inserto usuarios")
-                                                                                            await db.open();
-                                                                                        let rescrate: any = await db.createSyncTable();
-                                                                                        console.log(`Create Table ${JSON.stringify(rescrate.changes)}`)
-                                                                                        //creo un punto de restauracion en fecha 
-                                                                                        const d = new Date();
-                                                                                        await db.setSyncDate(d.toISOString());
-                                                                                        await db.execute(query)
-                                                                                        await db.close()
-                                                                
-                                                                                        const de = Math.floor(new Date().getTime() / 1000);
-                                                                                        const datos = {
-                                                                                            id: 0,
-                                                                                            syncDate: de
-                                                                                        }
-                                                                                        
-                                                                                        console.log(`fecha ${de}`)
-                                                                                        axios.post(BASE_URL+"/sync_date", datos)
+                                                                                            await repositoryPaises.insert(paises)
+                                                                                            .then(async(resp)=>{
+                                                                                                console.log("Inserto paises")
+                                                                                                await repositoryAreas.insert(area)
+                                                                                                .then(async(resp)=>{
+                                                                                                    console.log("Inserto area")
+                                                                                                    await repositoryParajes.insert(parajes)
+                                                                                                    .then(async(resp)=>{
+                                                                                                        console.log("inserto paraje")
+                                                                                                        await db.open();
+                                                                                                        let rescrate: any = await db.createSyncTable();
+                                                                                                        console.log(`Create Table ${JSON.stringify(rescrate.changes)}`)
+                                                                                                        //creo un punto de restauracion en fecha 
+                                                                                                        const d = new Date();
+                                                                                                        await db.setSyncDate(d.toISOString());
+                                                                                                        await db.execute(query)
+                                                                                                        await db.close()
+                                                                                
+                                                                                                        const de = Math.floor(new Date().getTime() / 1000);
+                                                                                                        const datos = {
+                                                                                                            id: 0,
+                                                                                                            syncDate: de
+                                                                                                        }
+                                                                                                        
+                                                                                                        console.log(`fecha ${de}`)
+                                                                                                        axios.post(BASE_URL+"/sync_date", datos)
+                                                                                                    })
+                                                                                                })
+                                                                                            })
                                                                                         })
                                                                                         
                                                                                         

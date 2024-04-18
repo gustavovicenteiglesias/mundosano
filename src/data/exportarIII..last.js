@@ -356,13 +356,13 @@ export const datos={
                     "value": "VARCHAR(150)  NOT NULL  COLLATE NOCASE"
                 },
                 {
-                    "column": "sql_deleted",
-                    "value": "BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1))"
-                },
-                {
-                    "column": "last_modified",
-                    "value": "INTEGER DEFAULT (strftime('%s', 'now'))"
-                }
+                     "column": "last_modified",
+                     "value": "INTEGER DEFAULT (strftime('%s', 'now'))"
+                 },
+                  {
+                     "column": "sql_deleted",
+                     "value": "BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1))"
+                 }
             ],
             "indexes": [
                 {
@@ -384,71 +384,7 @@ export const datos={
                     "timeevent": "AFTER UPDATE ON"
                 }
             ],
-            "values": [
-                [
-                    12,
-                    "AR",
-                    "Argentina",
-                    0,
-                    1681778904
-                ],
-                [
-                    27,
-                    "BO",
-                    "Bolivia",
-                    0,
-                    1681778904
-                ],
-                [
-                    31,
-                    "BR",
-                    "Brasil",
-                    0,
-                    1681778904
-                ],
-                [
-                    43,
-                    "CL",
-                    "Chile",
-                    0,
-                    1681778904
-                ],
-                [
-                    46,
-                    "CO",
-                    "Colombia",
-                    0,
-                    1681778904
-                ],
-                [
-                    57,
-                    "EC",
-                    "Ecuador",
-                    0,
-                    1681778904
-                ],
-                [
-                    177,
-                    "PY",
-                    "Paraguay",
-                    0,
-                    1681778904
-                ],
-                [
-                    178,
-                    "PE",
-                    "Perú",
-                    0,
-                    1681778904
-                ],
-                [
-                    243,
-                    "VE",
-                    "Venezuela",
-                    0,
-                    1681778904
-                ]
-            ]
+            
         },
         {
             "name": "provincias",
@@ -2310,13 +2246,13 @@ export const datos={
                     "value": "VARCHAR(100)  NOT NULL  COLLATE NOCASE"
                 },
                 {
-                    "column": "sql_deleted",
-                    "value": "BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1))"
-                },
-                {
-                    "column": "last_modified",
-                    "value": "INTEGER DEFAULT (strftime('%s', 'now'))"
-                },
+                     "column": "last_modified",
+                     "value": "INTEGER DEFAULT (strftime('%s', 'now'))"
+                 },
+                  {
+                     "column": "sql_deleted",
+                     "value": "BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1))"
+                 },
                 {
                     "constraint": "`fk_paises`",
                     "value": "FOREIGN KEY (`id_pais`) REFERENCES paises (`id_pais`) ON DELETE RESTRICT ON UPDATE RESTRICT"
@@ -2336,15 +2272,7 @@ export const datos={
                     "timeevent": "AFTER UPDATE ON"
                 }
             ],
-            "values": [
-                [
-                    1,
-                    12,
-                    "Pampa del Indio",
-                    0,
-                    1681778592
-                ]
-            ]
+           
         },
         {
             "name": "ciudades",
@@ -5368,13 +5296,13 @@ export const datos={
                     "value": "VARCHAR(100)  NOT NULL  COLLATE NOCASE"
                 },
                 {
-                    "column": "sql_deleted",
-                    "value": "BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1))"
-                },
-                {
-                    "column": "last_modified",
-                    "value": "INTEGER DEFAULT (strftime('%s', 'now'))"
-                },
+                     "column": "last_modified",
+                     "value": "INTEGER DEFAULT (strftime('%s', 'now'))"
+                 },
+                  {
+                     "column": "sql_deleted",
+                     "value": "BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1))"
+                 },
                 {
                     "constraint": "`fk_areas`",
                     "value": "FOREIGN KEY (`id_area`) REFERENCES areas (`id_area`) ON DELETE RESTRICT ON UPDATE RESTRICT"
@@ -5394,86 +5322,7 @@ export const datos={
                     "timeevent": "AFTER UPDATE ON"
                 }
             ],
-            "values": [
-                [
-                    1,
-                    1,
-                    "10 de Mayo",
-                    0,
-                    1681778922
-                ],
-                [
-                    2,
-                    1,
-                    "Lote 4 B",
-                    0,
-                    1681778922
-                ],
-                [
-                    3,
-                    1,
-                    "Campo Alemany",
-                    0,
-                    1681778922
-                ],
-                [
-                    4,
-                    1,
-                    "Pampa Chica",
-                    0,
-                    1681778922
-                ],
-                [
-                    7,
-                    1,
-                    "Cuarta Legua",
-                    0,
-                    1681778922
-                ],
-                [
-                    8,
-                    1,
-                    "Lote 4",
-                    0,
-                    1681778922
-                ],
-                [
-                    9,
-                    1,
-                    "Campo Medina",
-                    0,
-                    1681778922
-                ],
-                [
-                    10,
-                    1,
-                    "Campo Nuevo",
-                    0,
-                    1681778922
-                ],
-                [
-                    11,
-                    1,
-                    "Fortín Brown",
-                    0,
-                    1681778922
-                ],
-                [
-                    12,
-                    1,
-                    "Pampa Grande",
-                    0,
-                    1681778922
-                ],
-                [
-                    13,
-                    1,
-                    "Cancha Larga",
-                    0,
-                    1681778922
-                ]
-               
-            ]
+            
         },
         {
             "name": "control_emb_patologico",
