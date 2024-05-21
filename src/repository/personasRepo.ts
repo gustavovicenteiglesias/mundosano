@@ -10,8 +10,9 @@ import { NOMBRE_BB_DD } from "../utils/constantes";
 const dbdb = async () => {
   const ret = await sqlite.checkConnectionsConsistency();
   const isConn = (await sqlite.isConnection(NOMBRE_BB_DD)).result;
+
   var db: SQLiteDBConnection
-  if (ret.result && isConn) {
+  if ( ret.result && isConn) { //
     return db = await sqlite.retrieveConnection(NOMBRE_BB_DD);
   } else {
     return db = await sqlite.createConnection(NOMBRE_BB_DD);

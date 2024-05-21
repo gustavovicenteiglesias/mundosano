@@ -243,7 +243,7 @@ const EditControlEmbrazada: React.FC = () => {
             setControl((prevProps: any) => ({ ...prevProps, pap: "S" }));
 
         }
-        if (datos.data.paciente?.antecedentes.fum !== null) {
+        if (datos.data.paciente?.antecedentes.fum !== null  ) {
             setControl((prevProps: any) => ({ ...prevProps, edad_gestacional: hoy.diff(datos.data.paciente?.antecedentes.fum, "weeks") }));
         } else {
             setControl((prevProps: any) => ({ ...prevProps, edad_gestacional: 0 }));
@@ -906,7 +906,7 @@ const EditControlEmbrazada: React.FC = () => {
                         OnSubmit(e)
                         .then(()=>{
                             history.push("/personas")
-                            //window.location.reload()
+                            window.location.reload()
                             setLoading(false)
                         })
 

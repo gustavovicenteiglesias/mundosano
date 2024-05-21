@@ -1,4 +1,4 @@
-import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, withIonLifeCycle, IonItem, IonLabel, IonPage, IonRow, IonTitle, IonToolbar, useIonViewDidEnter, useIonViewWillEnter } from '@ionic/react';
+import { IonBackButton, IonButton, IonButtons, useIonAlert, IonContent, IonGrid, IonHeader, withIonLifeCycle, IonItem, IonLabel, IonPage, IonRow, IonTitle, IonToolbar, useIonViewDidEnter, useIonViewWillEnter } from '@ionic/react';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -9,16 +9,18 @@ import { IoAddCircleOutline } from 'react-icons/io5';
 import FilterComponent from '../components/FilterComponent';
 import { PersonasRepository } from '../repository/personasRepo';
 
+
 //import './Home.css';
 
 const Personas: React.FC = () => {
   const history = useHistory()
-
+  const [presentAlert]=useIonAlert()
   const [personas, setPersonas] = useState<any>([])
   const [toggledClearRows, setToggleClearRows] = useState(false);
   const [filterText, setFilterText] = useState('');
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const [isPendientes, setIsPendientes] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
   const repository=new PersonasRepository()
 
   var result1: any = [];
@@ -34,7 +36,7 @@ const Personas: React.FC = () => {
       setToggleClearRows(!toggledClearRows)
      
       history.push({ pathname: "/detallePaciente", state: selectedRows.selectedRows[0] })
-      window.location.reload()
+      //window.location.reload()
 
     }
     setToggleClearRows(!toggledClearRows)
@@ -48,10 +50,12 @@ const Personas: React.FC = () => {
       try {
          
 
-        
+          setLoading(true)
           let res = await repository.getTodos()
+         
           let pendiente=await repository.getPendientes()
           //console.log("Pendientes " + JSON.stringify(pendiente))
+          
           let arr = pendiente
           const result = arr.filter(
             (thing: any, index: any, self: any) =>
@@ -66,7 +70,7 @@ const Personas: React.FC = () => {
           //console.log(result);
           //console.log(result1);
           isPendientes ? setPersonas(result1) : setPersonas(res)
-
+          setLoading(false)
 
           // setPaises(JSON.parse(res.values) )
           
@@ -75,11 +79,13 @@ const Personas: React.FC = () => {
         return true;
       }
       catch (error: any) {
+        window.location.reload();
         return false;
       }
     }
     testDatabaseCopyFromAssets()
-  }, [isPendientes])
+    
+  }, [])
 
   const conditionalRowStyles = [
     {
@@ -202,6 +208,7 @@ const Personas: React.FC = () => {
           subHeader
           subHeaderComponent={subHeaderComponentMemo}
           persistTableHead
+          progressPending={loading}
 
         />
       </IonContent>

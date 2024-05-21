@@ -111,7 +111,7 @@ const Main: React.FC<any> = () => {
         setLoading(true)
         axios.post(BASE_URL + "/sqlite", data)
             .then(async (resp) => {
-
+                console.log(resp)
                 setLoading(false)
                 
                 if (resp.data.success) {
@@ -171,6 +171,10 @@ const Main: React.FC<any> = () => {
 
 
     }
+    const continuar=()=>{
+        history.push("/personas")
+        
+    }
     return (
 
         <IonPage>
@@ -195,7 +199,7 @@ const Main: React.FC<any> = () => {
 
 
                             </div>
-                            <IonButton expand='block' routerLink="/personas" color="secondary" className='button_css'>Continuar</IonButton>
+                            <IonButton expand='block' onClick={continuar} color="secondary" className='button_css'>Continuar</IonButton>
                             {hayInternet && <IonButton onClick={() => exportJson()} expand='block' color="secondary" className='button_css'>Exportar</IonButton>}
                             { /*<IonButton onClick={() => importJson()} expand='block' color="secondary" className='button_css'>Importar</IonButton>*/}
                             {hayInternet && <IonButton onClick={() => nuevaBBDD()} expand='block' color="secondary" className='button_css' disabled={loadindImport}>{loadindImport ? "Importando" : "Importar"}</IonButton>}

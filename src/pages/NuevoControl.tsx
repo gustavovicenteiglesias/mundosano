@@ -470,7 +470,7 @@ const NuevoControl: React.FC = () => {
                         OnSubmit(e)
                         .then(()=>{
                             history.push("/personas")
-                            //window.location.reload()
+                            window.location.reload()
                             setLoading(false)
                         })
 

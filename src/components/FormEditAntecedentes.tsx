@@ -212,6 +212,7 @@ const FormNuevaEmbAtecedentes: React.FC<any> = ({ datos }) => {
                 .then(()=>{
                     setError("")
                     history.push("/personas")
+                    window.location.reload()
                 })
 
                 
