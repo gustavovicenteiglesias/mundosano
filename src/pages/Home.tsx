@@ -51,20 +51,55 @@ const Home: React.FC = () => {
 
   }
   
+  
+
   useEffect(() => {
     async function de_vice() {
-      Device.getId().then(async (info) => {
-        console.log(info.identifier)
-        idDevice = info.identifier
-      })
+      let info =await Device.getId()
+      /*.then((info) => {
+        //console.log(info.identifier)
+        idDevice =  info.identifier
+      })*/
+      return info
     }
     
     de_vice()
-    logCurrentNetworkStatus();
-  }, [])
+    .then(async(info)=>{
+      try {
+        const lastRow = await get<any>("/findbynrodevice/" + info?.identifier)
+        .then(async(res)=>{
+          console.log("id ultimo " + res)
+          let currentUser =localStorage.getItem("user")
+          if (currentUser===null ) {
+            
+            console.log("No es igual")
+              const ultimoLastRow = await get<any>("/ultimarowdevice")
+                .then(async (resp) => {
+                  console.log("ultimo " + JSON.stringify(resp))
+                  const data: any = {
+                    nroDevice: info?.identifier,
+                    minId: resp[0].minId + 100000,
+                    maxId: resp[0].maxId + 100000,
+                    sqlDelete: 0,
+                    lastModified: Math.floor(new Date().getTime() / 1000)
+                  }
+                  console.log("dta " + JSON.stringify(data))
+                  localStorage.setItem("user",JSON.stringify(data))
+                  await post<IdSegunDevice, any>("/crearultimoid", data)
+                    .then((res) => {
+                      console.log("res " + JSON.stringify(res))
+                    })
+                })
+          }
+        })
+       
 
-  useEffect(() => {
-    async function getLastRow() {
+      } catch (error) {
+        console.log("error")
+      }
+    })
+    logCurrentNetworkStatus();
+    /*async function getLastRow() {
       try {
         const lastRow = await get<any>("/findbynrodevice/" + idDevice)
         .then(async(res)=>{
@@ -97,8 +132,8 @@ const Home: React.FC = () => {
       } catch (error) {
         console.log("error")
       }
-    }
-    getLastRow()
+    }*/
+    //getLastRow()
   }, [])
 
   return (
