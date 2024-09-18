@@ -91,11 +91,18 @@ const NuevoControl: React.FC = () => {
 
      
     let history = useHistory()
-    //console.log("FUM "+paciente?.antecedentes?.fum)
+    
     useEffect(() => {
         if (paciente?.antecedentes?.fum !== null) {
             setControl((prevProps: any) => ({ ...prevProps, gestas: hoy.diff(paciente?.antecedentes?.fum, "weeks") }));
-        } else {
+        }else if(paciente?.antecedentes?.fpp !== null){
+            setControl((prevProps: any) => ({
+                ...prevProps,
+                gestas: (hoy.diff(paciente?.antecedentes?.fpp, 'weeks')+40),
+              }));
+        }
+        
+        else {
             setControl((prevProps: any) => ({ ...prevProps, gestas: 0 }));
         }
 
@@ -446,7 +453,7 @@ const NuevoControl: React.FC = () => {
     }
 
 
-    console.log("@@@@@@control " + JSON.stringify(paciente))
+   
 
     return (
         <IonPage>
@@ -463,7 +470,7 @@ const NuevoControl: React.FC = () => {
                         OnSubmit(e)
                         .then(()=>{
                             history.push("/personas")
-                            //window.location.reload()
+                            window.location.reload()
                             setLoading(false)
                         })
 
@@ -475,8 +482,24 @@ const NuevoControl: React.FC = () => {
                      {/* === ION DATE TIME === */}
                      <IonItem>
                             <IonLabel position="stacked">{fecha1 === null || fecha1 === "null" ?"":"Fecha de Control"}</IonLabel>
-                            {fecha1 === null || fecha1 === "null" ? <IonButton onClick={(e) => setDataPicker(true)} size="small" >Fecha de Control</IonButton> : <IonDatetimeButton datetime="datetime" ></IonDatetimeButton>}
+                            {fecha1 === null || fecha1 === "null" ? <IonButton onClick={(e) => setDataPicker(true)} size="small" >Fecha de Control</IonButton> : <IonDatetimeButton datetime="datetime" defaultValue={fecha1} ></IonDatetimeButton>}
+                            <IonModal keepContentsMounted={true} isOpen={datapicker} className="ion-datetime-button-overlay" onDidDismiss={() => setDataPicker(false)}>
+                                <IonDatetime
+                                    
+                                    id="datetime"
+                                    name="fecha_ultimocontrol"
+                                    onIonChange={(e) => setFecha1(e.target.value)}
+                                    presentation="date"
+                                    showDefaultButtons={true}
+                                    doneText="Confirmar"
+                                    showClearButton
+                                    cancelText="Cancelar"
+                                    clearText="Limpiar"
+                                    value={fecha1}
+                                    onIonCancel={() => setDataPicker(false)}
 
+                                />
+                            </IonModal>
                             
                         </IonItem>
                     {/* Ecografia */}
@@ -795,23 +818,7 @@ const NuevoControl: React.FC = () => {
                             </IonItem>
                         </IonList>
                     </IonCard>
-                    <IonModal keepContentsMounted={true} isOpen={datapicker} onDidDismiss={(e) => setDataPicker(false)} className="ion-datetime-button-overlay">
-                        <IonDatetime
-                            id="datetime"
-                            name="fecha_control"
-                            onIonChange={(e) => fechaNacimiento(e)}
-                            presentation="date"
-                            showDefaultButtons={true}
-                            showClearButton
-                            doneText="Confirmar"
-                            cancelText="Cancelar"
-                            clearText="Limpiar"
-                            placeholder="fecha"
-                            onIonCancel={(e) => setDataPicker(false)}
-                            
-
-                        />
-                    </IonModal>
+                    
                     <IonButton expand="block" fill="outline" type="submit" disabled={isLoading}>{isLoading ? "Guardando" : "Guardar"}</IonButton>
                 </form>
             </IonContent>

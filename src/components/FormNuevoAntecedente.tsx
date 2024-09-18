@@ -1,27 +1,32 @@
 
-import { IonAccordion, IonAccordionGroup, IonButton, IonCol, IonContent, IonDatetime, IonDatetimeButton, IonInput, IonItem, IonLabel, IonModal, IonNote, IonRadio, IonRadioGroup, IonRow, IonSelect, IonSelectOption } from "@ionic/react"
+import { IonAccordion, IonAccordionGroup, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonDatetimeButton, IonInput, IonItem, IonLabel, IonModal, IonNote, IonRadio, IonRadioGroup, IonRow, IonSelect, IonSelectOption, useIonViewWillEnter } from "@ionic/react"
 import moment from "moment"
 import { useEffect, useRef, useState } from "react"
 
 import { useHistory } from "react-router";
+import { Repository } from "../repository/Repository";
+import { Antecedentes_Apps } from "../models/Antecedentes_Apps";
+import { Antecedentes_Macs } from "../models/Antecedentes_Macs";
+import { Antecedentes } from "../models/Antecedentes";
 import { Apps } from "../models/Apps";
 import { Macs } from "../models/Macs";
-import { Repository } from "../repository/Repository";
 
 interface antecedentes {
     id_antecedente?: number,
     id_persona?: number,
     id_control?: number,
     edad_primer_embarazo?: number | null,
-    fecha_ultimo_embarazo?: string | null,
+    fecha_ultimo_embarazo: string | null,
     gestas?: number | 0,
     partos?: number | 0,
     cesareas?: number | 0,
     abortos?: number | 0,
     planificado?: number | null,
-    fum?: string | null,
-    fpp?: string | null,
+    fum: string | null,
+    fpp: string | null,
     fecha?: Date,
+    id_app: number | null,
+    id_mac: number | null
 
 }
 interface antecedentesPersona {
@@ -48,111 +53,111 @@ interface persona {
     formLLeno?: boolean
 
 }
-const FormNuevaEmbAtecedentes: React.FC<antecedentesPersona> = (persona) => {
+const FormNuevoAtecedentes: React.FC<any> = ({ datos }) => {
     const [datapicker, setDataPicker] = useState<boolean>(false)
     const [datapicker1, setDataPicker1] = useState<boolean>(false)
     const [datapicker2, setDataPicker2] = useState<boolean>(false)
-    const [fecha, setFecha] = useState<any>(null)
-    const [fecha1, setFecha1] = useState<any>(null)
-    const [fechaFUM, setFechaFUM] = useState<any>(null)
-    const [fechaFUM1, setFechaFUM1] = useState<any>(null)
-    const [fechaFPP, setFechaFPP] = useState<any>(null)
-    const [fechaFPP1, setFechaFPP1] = useState<any>(null)
-    const [macs, setMacs] = useState<any>([])
-    const [apps, setApps] = useState<any>([])
-    const [ante, setAnte] = useState<antecedentes>()
-
-    const [paciente, setPaciente] = useState<persona>()
+    const [macs, setMacs] = useState<Antecedentes_Macs[]>([])
+    const [apps, setApps] = useState<Antecedentes_Apps[]>([])
+    const [ante, setAnte] = useState<any>()
+    const [paciente, setPaciente] = useState<any>()
     const [error, setError] = useState<string>("")
+    const [isLoading, setLoading] = useState<boolean>(false)
 
-     const repositoryApps=new Repository<Apps>("apps");
-    const repositoryMacs=new Repository<Macs>("macs");
+    const repositoryAntecedentesApps = new Repository<Antecedentes_Apps>("antecedentes_apps");
+    const repositoryAntecedentesMacs = new Repository<Antecedentes_Macs>("antecedentes_macs");
+    const repositoryAntecedentes = new Repository<Antecedentes>("antecedentes")
+    const repositoryApps = new Repository<Apps>("apps");
+    const repositoryMacs = new Repository<Macs>("macs");
 
     const history = useHistory()
     const ref = useRef("")
+
+
     const fechaNacimiento = (e: any) => {
         const dia = moment(e.detail.value).format("YYYY-MM-DD")
-
+        const diahoy = moment().format("YYYY-MM-DD")
         setDataPicker(false)
-        setFecha(e.detail.value)
-        setFecha1(dia)
+        //setFecha(e.detail.value)
+        //setFecha1(dia)
+        const { name, value } = e.target;
+
+        if (dia !== "Fecha inválida") setAnte((prevProps: any) => ({ ...prevProps, [name]: dia }));
+
     }
     const fecha_FUM = (e: any) => {
         const dia = moment(e.detail.value).format("YYYY-MM-DD")
 
         setDataPicker1(false)
-        setFechaFUM(dia)
-        setFechaFUM1(dia)
+        const { name, value } = e.target;
+        if (dia !== "Fecha inválida") setAnte((prevProps: any) => ({ ...prevProps, [name]: dia }))
     }
 
     const fecha_FPP = (e: any) => {
         const dia = moment(e.detail.value).format("YYYY-MM-DD")
-
         setDataPicker2(false)
-        setFechaFPP(dia)
-        setFechaFPP1(dia)
+        const { name, value } = e.target;
+        if (dia !== "Fecha inválida") setAnte((prevProps: any) => ({ ...prevProps, [name]: dia }));
     }
 
     const calculoFPP = (e: any) => {
-        if (fechaFUM !== null) {
-            const dia = moment(fechaFUM).add(280, 'days')
-
-            setFechaFPP(dia.format())
-            setFechaFPP1(dia.format("YYYY-MM-DD"))
+        if (ante?.fum !== null) {
+            const dia = moment(ante?.fum).add(280, 'days').format("YYYY-MM-DD")
+            setAnte((prevProps: any) => ({ ...prevProps, fpp: dia }));
         }
 
     }
 
+    const calculoFUM = (e: any) => {
+        const dia = moment(ante?.fpp).add(-280, 'days').format("YYYY-MM-DD")
+        setAnte((prevProps: any) => ({ ...prevProps, fum: dia }));
+    }
+
     const handleInputChange = (e: any) => {
         const { name, value } = e.target;
-        setAnte((prevProps) => ({ ...prevProps, [name]: value }));
+        setAnte((prevProps: any) => ({ ...prevProps, [name]: value }));
     }
 
     const onSubmit = (e: any) => {
         e.preventDefault()
-        if (ante?.abortos && ante?.cesareas && ante?.partos && ante?.gestas !== undefined) {
+        
+       
             if ((Number(ante?.abortos) + Number(ante?.cesareas) + Number(ante?.partos)) > (Number(ante?.gestas) - 1)) {
-
+                
                 setError("La suma de abortos , cesareas y partos no puede superar la cantidad de gestaciones ")
             } else {
+                
                 let data_antecedentes = ante;
 
-                data_antecedentes.fum = fechaFUM;
-                data_antecedentes.fpp = fechaFPP;
                 data_antecedentes.fecha = new Date()
-                if (fecha === "") {
-                    data_antecedentes.fecha_ultimo_embarazo = null;
-                } else {
-                    data_antecedentes.fecha_ultimo_embarazo = fecha;
-                }
+
                 if (ante.planificado) {
                     data_antecedentes.planificado = 1
                 } else {
                     data_antecedentes.planificado = 0
                 }
+                
                 history.replace({state:null})
-                history.push({ pathname: "/nuevaembarazadacontrol", state: { control: data_antecedentes, paciente: paciente } })
-                window.location.reload()
+                history.push({ pathname: "/nuevoembarazocontrol", state: { control: data_antecedentes, paciente: paciente } })
                 setError("")
             }
-        }
-
+        
     }
 
-    
+
     useEffect(() => {
 
         const testDatabaseCopyFromAssets = async (): Promise<any> => {
             try {
-                
-               
+
+
                 let res: any = await repositoryMacs.getAll();
-                console.log("Macs "+JSON.stringify(res))
+                console.log("Macs " + JSON.stringify(res))
                 setMacs(res)
                 let resAPP: any = await repositoryApps.getAll();
-                console.log("Apps "+JSON.stringify(resAPP))
+                console.log("Apps " + JSON.stringify(resAPP))
                 setApps(resAPP)
-              
+
                 return true;
             }
             catch (error: any) {
@@ -162,14 +167,22 @@ const FormNuevaEmbAtecedentes: React.FC<antecedentesPersona> = (persona) => {
         testDatabaseCopyFromAssets()
     }, [])
     useEffect(() => {
-        setPaciente(persona.persona)
-    }, [error])
+
+        setAnte({
+            ...datos.antecedentes,
+            gestas: Number(datos.antecedentes.gestas + 1),
+            fpp: null,
+            fum: null,
+            fecha_ultimo_embarazo: datos.antecedentes.fpp
+        })
+        setPaciente(datos)
+    }, [])
 
     useEffect(() => {
 
     }, [error])
-
-
+    
+    
     return (
         <IonContent>
             <form onSubmit={(e) => onSubmit(e)}>
@@ -177,18 +190,19 @@ const FormNuevaEmbAtecedentes: React.FC<antecedentesPersona> = (persona) => {
                     <IonCol>
                         <IonItem>
                             <IonLabel position="floating">Edad 1er Parto</IonLabel>
-                            <IonInput name="edad_primer_embarazo" required onIonChange={(e) => handleInputChange(e)}></IonInput>
+                            <IonInput name="edad_primer_embarazo" required onIonChange={(e) => handleInputChange(e)} value={ante?.edad_primer_embarazo}></IonInput>
                         </IonItem>
                     </IonCol>
                     <IonCol>
                         <IonItem>
                             <IonLabel position="stacked">Fecha de último parto</IonLabel>
-                            {/*<IonInput onClick={() => setDataPicker(true)} name="fecha_nacimiento">{fecha1}</IonInput>*/}
-                            {fecha === null ? <IonButton id="datetimefn1" size="small" slot="end">Fecha Último Embarazo</IonButton> : <IonDatetimeButton datetime="datetimefn" slot="end"></IonDatetimeButton>}
-                            <IonModal keepContentsMounted={true} trigger="datetimefn1" className="ion-datetime-button-overlay">
+                            {/* <IonInput onClick={() => setDataPicker(true)} name="fecha_ultimo_embarazo" value={ante?.fecha_ultimo_embarazo}></IonInput>*/}
+
+                            {ante?.fecha_ultimo_embarazo === null || ante?.fecha_ultimo_embarazo === "null" ? <IonButton onClick={() => setDataPicker(true)} size="small" slot="end">Fecha Último Embarazo</IonButton> : <IonDatetimeButton datetime="datetimeultimo" slot="end"></IonDatetimeButton>}
+                            <IonModal keepContentsMounted={true} isOpen={datapicker} className="ion-datetime-button-overlay" onDidDismiss={() => setDataPicker(false)}>
                                 <IonDatetime
-                                    id="datetimefn"
-                                    name="fum"
+                                    id="datetimeultimo"
+                                    name="fecha_ultimo_embarazo"
                                     onIonChange={(e) => fechaNacimiento(e)}
                                     presentation="date"
                                     showDefaultButtons={true}
@@ -196,11 +210,12 @@ const FormNuevaEmbAtecedentes: React.FC<antecedentesPersona> = (persona) => {
                                     showClearButton
                                     cancelText="Cancelar"
                                     clearText="Limpiar"
-                                    value={fecha1}
+                                    value={ante?.fecha_ultimo_embarazo}
+                                    onIonCancel={() => setDataPicker(false)}
 
                                 />
                             </IonModal>
-                            {/*datapicker && <IonDatetime presentation="date" onIonChange={(e) => fechaNacimiento(e)} value={fecha}></IonDatetime>*/}
+                            {/*datapicker && <IonDatetime presentation="date" name="fecha_ultimo_embarazo" onIonChange={(e) => fechaNacimiento(e)} value={ante?.fecha_ultimo_embarazo}></IonDatetime>*/}
                         </IonItem>
 
                     </IonCol>
@@ -209,13 +224,13 @@ const FormNuevaEmbAtecedentes: React.FC<antecedentesPersona> = (persona) => {
                     <IonCol>
                         <IonItem>
                             <IonLabel position="floating">Gestaciones</IonLabel>
-                            <IonInput type="number" name="gestas" required onIonChange={(e) => handleInputChange(e)}></IonInput>
+                            <IonInput type="number" name="gestas" required onIonChange={(e) => handleInputChange(e)} value={ante?.gestas}></IonInput>
                         </IonItem>
                     </IonCol>
                     <IonCol>
                         <IonItem>
                             <IonLabel position="floating">Partos</IonLabel>
-                            <IonInput type="number" name="partos" required onIonChange={(e) => handleInputChange(e)}></IonInput>
+                            <IonInput type="number" name="partos" required onIonChange={(e) => handleInputChange(e)} value={ante?.partos}></IonInput>
                         </IonItem>
                     </IonCol>
                 </IonRow>
@@ -223,13 +238,13 @@ const FormNuevaEmbAtecedentes: React.FC<antecedentesPersona> = (persona) => {
                     <IonCol>
                         <IonItem>
                             <IonLabel position="floating">Cesareas</IonLabel>
-                            <IonInput type="number" name="cesareas" required onIonChange={(e) => handleInputChange(e)}></IonInput>
+                            <IonInput type="number" name="cesareas" required onIonChange={(e) => handleInputChange(e)} value={ante?.cesareas}></IonInput>
                         </IonItem>
                     </IonCol>
                     <IonCol>
                         <IonItem>
                             <IonLabel position="floating">Abortos</IonLabel>
-                            <IonInput type="number" name="abortos" required onIonChange={(e) => handleInputChange(e)}></IonInput>
+                            <IonInput type="number" name="abortos" required onIonChange={(e) => handleInputChange(e)} value={ante?.abortos}></IonInput>
                         </IonItem>
                     </IonCol>
 
@@ -240,8 +255,8 @@ const FormNuevaEmbAtecedentes: React.FC<antecedentesPersona> = (persona) => {
                 <IonRow>
                     <IonCol>
                         <IonItem>
-                            <IonLabel position="floating">APPs</IonLabel>
-                            <IonSelect name="app" onIonChange={(e) => handleInputChange(e)}>
+                            <IonLabel position="stacked">APPs</IonLabel>
+                            <IonSelect name="id_app" onIonChange={(e) => handleInputChange(e)} value={ante?.id_app}>
 
                                 {apps?.map((data: any, i: any) => {
                                     return (
@@ -253,8 +268,8 @@ const FormNuevaEmbAtecedentes: React.FC<antecedentesPersona> = (persona) => {
                     </IonCol>
                     <IonCol>
                         <IonItem>
-                            <IonLabel position="floating">MACs</IonLabel>
-                            <IonSelect name="mac" onIonChange={(e) => handleInputChange(e)}>
+                            <IonLabel position="stacked">MACs</IonLabel>
+                            <IonSelect name="id_mac" onIonChange={(e) => handleInputChange(e)} value={ante?.id_mac}>
                                 {macs?.map((data: any, i: any) => {
 
                                     return (
@@ -275,11 +290,13 @@ const FormNuevaEmbAtecedentes: React.FC<antecedentesPersona> = (persona) => {
                     <IonCol>
                         <IonItem>
                             <IonLabel position="stacked">Fecha Última Menstruación</IonLabel>
-                            {/* <IonInput onClick={() => setDataPicker1(true)} name="fum" >{fechaFUM1}</IonInput>*/}
-                            {fechaFUM === null ? <IonButton id="datetimefum1" size="small" slot="end">FUM</IonButton> : <IonDatetimeButton datetime="datetimefum" slot="end"></IonDatetimeButton>}
-                            <IonModal keepContentsMounted={true} trigger="datetimefum1" className="ion-datetime-button-overlay">
+                            {/*<IonInput onClick={() => setDataPicker1(true)} name="fum" >{ante?.fum}</IonInput>*/}
+                            <IonButton onClick={() => setAnte((prevProps: any) => ({ ...prevProps, fum: null }))} size="small" slot="end">Limpiar</IonButton>
+                            {ante?.fum === null || ante?.fum === "null" ? <IonButton onClick={(e) => setDataPicker1(true)} size="small" slot="end">Fum</IonButton> : <IonDatetimeButton datetime="datetimeeditarfum" slot="end"></IonDatetimeButton>}
+                            <IonModal keepContentsMounted={true} isOpen={datapicker1} className="ion-datetime-button-overlay" onDidDismiss={(e) => setDataPicker1(false)}>
                                 <IonDatetime
-                                    id="datetimefum"
+
+                                    id="datetimeeditarfum"
                                     name="fum"
                                     onIonChange={(e) => fecha_FUM(e)}
                                     presentation="date"
@@ -288,24 +305,28 @@ const FormNuevaEmbAtecedentes: React.FC<antecedentesPersona> = (persona) => {
                                     showClearButton
                                     cancelText="Cancelar"
                                     clearText="Limpiar"
-                                    value={fechaFUM}
+                                    value={ante?.fum}
+                                    onIonCancel={(e) => setDataPicker1(false)}
+                                >
 
-                                />
+                                </IonDatetime>
                             </IonModal>
-                            {/*datapicker1 && <IonDatetime presentation="date" onIonChange={(e) => fecha_FUM(e)} value={fechaFUM}></IonDatetime>*/}
+
+                            {/*datapicker1 && <IonDatetime presentation="date" name="fum" onIonChange={(e) => fecha_FUM(e)} value={moment(ante?.fum).format("YYYY-MM-DD")}></IonDatetime>*/}
 
                         </IonItem>
                         <IonButton expand="block" fill="outline" onClick={(e) => calculoFPP(e)}>Calcular Fecha Probable de Parto</IonButton>
+                        {/* <IonButton expand="block" fill="outline" onClick={(e) => calculoFUM(e)}>Calcular Fecha Ultimo Embarazo</IonButton>*/}
                     </IonCol>
                     <IonCol>
                         <IonItem>
                             <IonLabel position="stacked">Fecha Probable de Parto</IonLabel>
-                            {/*<IonInput onClick={() => setDataPicker2(true)} name="fpp">{fechaFPP1}</IonInput>*/}
-                            {fechaFPP === null ? <IonButton id="datetimefpp1" size="small" slot="end">FPP</IonButton> : <IonDatetimeButton datetime="datetimefpp" slot="end"></IonDatetimeButton>}
-                            <IonModal keepContentsMounted={true} trigger="datetimefpp1" className="ion-datetime-button-overlay">
+                            {/* <IonInput onClick={() => setDataPicker2(true)} name="fpp">{ante?.fpp}</IonInput>*/}
+                            {ante?.fpp === null || ante?.fpp === "null" ? <IonButton onClick={(e) => setDataPicker2(true)} size="small" slot="end">FPP</IonButton> : <IonDatetimeButton datetime="datetimeeditarfpp" slot="end"></IonDatetimeButton>}
+                            <IonModal keepContentsMounted={true} isOpen={datapicker2} className="ion-datetime-button-overlay" onDidDismiss={(e) => setDataPicker2(false)}>
                                 <IonDatetime
-                                    id="datetimefpp"
-                                    name="fum"
+                                    id="datetimeeditarfpp"
+                                    name="fpp"
                                     onIonChange={(e) => fecha_FPP(e)}
                                     presentation="date"
                                     showDefaultButtons={true}
@@ -313,11 +334,13 @@ const FormNuevaEmbAtecedentes: React.FC<antecedentesPersona> = (persona) => {
                                     showClearButton
                                     cancelText="Cancelar"
                                     clearText="Limpiar"
-                                    value={fechaFPP1}
+                                    value={ante?.fpp}
+                                    onIonCancel={(e) => setDataPicker2(false)}
+
 
                                 />
                             </IonModal>
-                            {/*datapicker2 && <IonDatetime presentation="date" onIonChange={(e) => fecha_FPP(e)} value={fechaFPP}></IonDatetime>*/}
+                            {/*datapicker2 && <IonDatetime presentation="date" name="fpp" onIonChange={(e) => fecha_FPP(e)} value={moment(ante?.fpp).format("YYYY-MM-DD")}></IonDatetime>*/}
                         </IonItem>
 
                     </IonCol>
@@ -327,4 +350,4 @@ const FormNuevaEmbAtecedentes: React.FC<antecedentesPersona> = (persona) => {
         </IonContent>
     )
 }
-export default FormNuevaEmbAtecedentes
+export default FormNuevoAtecedentes

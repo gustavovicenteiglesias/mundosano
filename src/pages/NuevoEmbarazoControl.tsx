@@ -60,7 +60,7 @@ const inicial_control = {
 
 }
 
-const NuevaEmbarazadaControl: React.FC = () => {
+const NuevoEmbarazadaControl: React.FC = () => {
 
     const location = useLocation();
     const [datapicker, setDataPicker] = useState<boolean>(false)
@@ -90,7 +90,7 @@ const NuevaEmbarazadaControl: React.FC = () => {
     const repositoryEtmisPersonas=new Repository<Etmis_Personas>("etmis_personas")
 
     const hoy = moment()
-   
+    
     
     let history = useHistory()
     useEffect(() => {
@@ -113,6 +113,7 @@ const NuevaEmbarazadaControl: React.FC = () => {
             
     },[])
 
+
     useIonViewWillEnter(() => {
        
         const testDatabaseCopyFromAssets = async (): Promise<any> => {
@@ -131,7 +132,9 @@ const NuevaEmbarazadaControl: React.FC = () => {
 
 
 
-
+    const handleEdadGestacional=(e:any)=>{
+        setEdadGestacional(e.target.value);
+    }
     const handleInputChange = (e: any) => {
         const { name, value } = e.target;
         setControl((prevProps: any) => ({ ...prevProps, [name]: value }));
@@ -156,9 +159,6 @@ const NuevaEmbarazadaControl: React.FC = () => {
             setshowEco_observa(false)
         }
 
-    }
-    const handleEdadGestacional=(e:any)=>{
-        setEdadGestacional(e.target.value);
     }
     const handleInputChangeHpv = (e: any) => {
         const { name, value } = e.target;
@@ -217,48 +217,12 @@ const NuevaEmbarazadaControl: React.FC = () => {
         //laboratorios.sifilis
         //Insert tabla personas
  
-        let ultimo_id_persona = await repositoryPersonas.getLastRowId("id_persona") //consulta(`SELECT id_persona FROM personas WHERE id_persona BETWEEN  ${minimo} AND ${maximo} ORDER BY id_persona DESC LIMIT 1`)
-        const newPersona:Personas={
-            id_persona: ultimo_id_persona + 1,
-            apellido: paciente.paciente.apellido,
-            nombre: paciente.paciente.nombre,
-            documento: paciente.paciente.documento,
-            fecha_nacimiento: moment(paciente.paciente.fecha_nacimiento).format("YYYY-MM-DD"),
-            id_origen: paciente.paciente.origen,
-            nacionalidad: paciente.paciente.nacionalidad,
-            sexo: "F",
-            madre: paciente.paciente.madre,
-            alta: paciente.paciente.alta,
-            nacido_vivo: paciente.paciente.nacido_vivo,
-            sql_deleted: 0,
-            last_modified: Math.floor(new Date().getTime() / 1000),
-           // usuario_modified: currentuser?.id_usuario===undefined?0:currentuser.id_usuario
-        }
-        ultimo_id_persona=ultimo_id_persona+1//ultimo id_persona
-        const insertPersonas=await repositoryPersonas.create(newPersona)
-        if(insertPersonas)console.log("Persona insertada")
+        
+        const ultimo_id_persona=paciente.control.id_persona
+        
        
 
         
-        let ultimo_id_ubicacion = await repositoryUbicacion.getLastRowId("id_ubicacion")//consulta(`SELECT id_ubicacion FROM ubicaciones WHERE id_persona BETWEEN ${minimo} AND ${maximo} ORDER BY id_persona DESC LIMIT 1`)
-        let ubicacionGeo=paciente.paciente.latitud+" "+ paciente.paciente.longitud
-        const newUbicacion:Ubicaciones={
-            id_ubicacion: ultimo_id_ubicacion + 1,
-            id_persona: ultimo_id_persona,
-            id_paraje: paciente.paciente.paraje_residencia,
-            id_area: paciente.paciente.area_residencia,
-            num_vivienda: "",
-            fecha: fecha1,
-            georeferencia: ubicacionGeo,
-            id_pais: paciente.paciente.pais_residencia,
-            sql_deleted: 0,
-            last_modified: Math.floor(new Date().getTime() / 1000),
-            //usuario_modified: currentuser?.id_usuario===undefined?0:currentuser.id_usuario
-        }
-        ultimo_id_ubicacion=ultimo_id_ubicacion+1
-        const insertUbicaciones=await repositoryUbicacion.create(newUbicacion)
-        if(insertUbicaciones)console.log("Ubicacion insertada");
-       console.log("id_persona "+(ultimo_id_persona-1))
         
         
         let ultimo_id_control = await repositoryControles.getLastRowId("id_control")//consulta(`SELECT id_control FROM controles WHERE id_control BETWEEN ${minimo} AND ${maximo} ORDER BY id_control DESC LIMIT 1`)
@@ -292,76 +256,45 @@ const NuevaEmbarazadaControl: React.FC = () => {
             
         
 
-        //insert antecedentes
-        ultimo_id_control = newControles.id_control//await consulta(`SELECT id_control FROM controles WHERE id_control BETWEEN ${minimo} AND ${maximo} ORDER BY id_control DESC LIMIT 1`)
-        let ultimo_id_antecedentes = await repositoryAntecedentes.getLastRowId("id_antecedente")//consulta(`SELECT id_antecedente FROM antecedentes WHERE id_antecedente BETWEEN ${minimo} AND ${maximo} ORDER BY id_antecedente DESC LIMIT 1`)
-        let insertfum=paciente.control?.fum === null ? null : moment(paciente.control.fum).format("YYYY-MM-DD")
-        console.log("insert "+insertfum)
-        let insert_fecha_ultimo_embarazo = paciente?.control.fecha_ultimo_embarazo === null || paciente?.control.fecha_ultimo_embarazo === "null" ? null :  paciente?.control.fecha_ultimo_embarazo 
-        let insertfpp=paciente.control?.fpp === null ? null : moment(paciente.control.fpp).format("YYYY-MM-DD")
-        const newAntecedentes:Antecedentes={
-            id_antecedente: ultimo_id_antecedentes+1, 
-            id_persona: ultimo_id_persona,
-            id_control: ultimo_id_control,
-            edad_primer_embarazo: Number(paciente.control.edad_primer_embarazo),
-            fecha_ultimo_embarazo: insert_fecha_ultimo_embarazo,
-            gestas: Number(paciente.control.gestas),
-            partos:Number(paciente.control.partos) ,
-            cesareas:Number(paciente.control.cesareas) ,
-            abortos:Number(paciente.control.abortos) ,
+        //update antecedentes
+        let newAntecedentes:Antecedentes={
+            id_control:ultimo_id_control,    
+            edad_primer_embarazo:Number(paciente.control.edad_primer_embarazo) ,
+            fecha_ultimo_embarazo: paciente.control.fecha_ultimo_embarazo,
+            gestas:Number(paciente.control.gestas),
+            partos: Number(paciente.control.partos),
+            cesareas: Number(paciente.control.cesareas),
+            abortos: Number(paciente.control.abortos),
             planificado: paciente.control.planificado,
-            fum: insertfum,
-            fpp: insertfpp,
-            sql_deleted: 0,
-            last_modified: Math.floor(new Date().getTime() / 1000),
-            //usuario_modified: currentuser?.id_usuario===undefined?0:currentuser.id_usuario
-        }
-        let insertAntecedentes = await repositoryAntecedentes.create(newAntecedentes)//consulta(`INSERT INTO antecedentes(id_antecedente,id_persona,id_control,edad_primer_embarazo,
-          
-        if(insertAntecedentes )console.log("Insertar antecedentes")
-
-        //si hay macs insertar en la tabla de antecedentes_apps
-        
-        ultimo_id_antecedentes =Number(newAntecedentes.id_antecedente) 
-        const newAntecedentesApss:Antecedentes_Apps={
-            id_antecedente: ultimo_id_antecedentes,
-            id_app: paciente.control.app,
+            fum: paciente.control.fum,
+            fpp: paciente.control.fpp,
             last_modified: Math.floor(new Date().getTime() / 1000),
             sql_deleted: 0
-           
         }
-        if (paciente.control.app !== undefined) {
-           //await consulta(`SELECT id_antecedente FROM antecedentes WHERE id_antecedente BETWEEN ${minimo} AND ${maximo} ORDER BY id_antecedente DESC LIMIT 1`)
-           
-            let apps_antecedentes = await repositoryAntecedentesApps.create(newAntecedentesApss)
-            if (apps_antecedentes) console.log("Insertar antecedentes apps")
-        } else {
-           newAntecedentesApss.id_app=10
-            let apps_antecedentes = await repositoryAntecedentesApps.create(newAntecedentesApss)
-            if (apps_antecedentes) console.log("Insertar antecedentes apps")
-        }
-
-        //si hay macs insertar en la tabla de antecedentes_macs
-        const newAntecedentesMacs:Antecedentes_Macs={
-            id_antecedente: ultimo_id_antecedentes,
-            id_mac: paciente.control.mac,
+        let res: any = await repositoryAntecedentes.update(newAntecedentes,"id_antecedente",Number(paciente.control.id_antecedente))
+        if(res)console.log("Se actualizo antecedentes")
+        
+        // update app
+        let newAntecedentesApps:Antecedentes_Apps={
+            id_antecedente:Number(paciente.control.id_antecedente) ,
+            id_app:Number(paciente.control.id_app),
             sql_deleted: 0,
-            last_modified: Math.floor(new Date().getTime() / 1000),
-            //usuario_modified: currentuser?.id_usuario===undefined?0:currentuser.id_usuario
+            last_modified: Math.floor(new Date().getTime() / 1000)
+            }
+        let resapp=await repositoryAntecedentesApps.update(newAntecedentesApps,"id_antecedente",Number(paciente.control.id_antecedente))
+        if(resapp)console.log("Se actualizo app")   
+        
+        //update mac
+
+        let newAntecedentesMacs:Antecedentes_Macs={
+            id_antecedente: Number(paciente.control.id_antecedente),
+            id_mac: Number(paciente.control.id_mac),
+            sql_deleted: 0,
+            last_modified: Math.floor(new Date().getTime() / 1000)
         }
-        if (paciente.control.mac !== undefined) {
-            let macs_antecedente = await repositoryAntecedentesMacs.create(newAntecedentesMacs);
-            if (macs_antecedente) console.log("Insertar antecedentes macs")
-
-        } else {
-            newAntecedentesMacs.id_mac = 6
-            let macs_antecedente = await await repositoryAntecedentesMacs.create(newAntecedentesMacs);
-            if (macs_antecedente) console.log("Insertar antecedentes macs")
-
-        }
-
-
-
+        const resmac=await repositoryAntecedentesMacs.update(newAntecedentesMacs,"id_antecedente",Number(paciente.control.id_antecedente))
+        if(resmac)console.log("Se actualizo mac")
+        
         //insert control embarazada
         let ultimo_id_control_embarazada = await repositoryControlEmbarazo.getLastRowId("id_control_embarazo")//consulta(`SELECT id_control_embarazo FROM control_embarazo WHERE id_control_embarazo BETWEEN ${minimo} AND ${maximo} ORDER BY id_control_embarazo DESC LIMIT 1`)
         const newControlEmbarazo:Control_Embarazo={
@@ -552,8 +485,15 @@ const NuevaEmbarazadaControl: React.FC = () => {
      
     }
 
-    
-   
+
+    const fechaNacimiento = (e: any) => {
+        const dia = moment(e.detail.value).format("YYYY-MM-DD")
+        setDataPicker(false)
+        //setPaciente((prevProps) => ({ ...prevProps, fecha_nacimiento: dia }))
+        setFecha1(dia)
+        //setFecha(e.detail.value)
+        //setValue('fecha_nacimiento', e.detail.value)
+    }
 
     return (
         <IonPage>
@@ -570,13 +510,13 @@ const NuevaEmbarazadaControl: React.FC = () => {
                         OnSubmit(e)
                         .then(()=>{
                             history.push("/personas")
-                            window.location.reload()
+                           window.location.reload()
                             setLoading(false)
                         })
 
                         }}>
                     <IonItem>
-                        <IonLabel position="floating">Edad Gestacional ({edadGestacional } Semanas )</IonLabel>
+                    <IonLabel position="floating">Edad Gestacional ({edadGestacional } Semanas )</IonLabel>
                         <IonInput type="number"  value={edadGestacional} name="edad_gestacional" onIonChange={e => handleEdadGestacional(e)} ></IonInput>
                     </IonItem>
                      {/* === ION DATE TIME === */}
@@ -929,4 +869,4 @@ const NuevaEmbarazadaControl: React.FC = () => {
 
 }
 
-export default NuevaEmbarazadaControl
+export default NuevoEmbarazadaControl

@@ -16,6 +16,8 @@ import { Control_Embarazo } from "../models/Control_Embarazo";
 import { Inmunizaciones_Control } from "../models/Inmunizaciones_Control";
 import { Laboratorios_Realizados } from "../models/Laboratorios_Realizados";
 import { Etmis_Personas } from "../models/Etmis_Personas";
+import { Controles } from "../models/Controles";
+import { SoloFechaControl } from "../repository/SoloFechaControl";
 
 
 const inicial_control = {
@@ -65,10 +67,10 @@ const EditControlEmbrazada: React.FC = () => {
     
     //const [datos, setdatos] = useState<any>(datoss);
     const [datapicker, setDataPicker] = useState<boolean>(false)
-    const [fecha1, setFecha1] = useState<any>(null)
+    const [fecha1, setFecha1] = useState<any>();
     const [paciente, setPaciente] = useState<any>();
     const [control, setControl] = useState<any>(inicial_control)
-    const [diferencia, setDiferencia] = useState<any>()
+    const [edadGestacional, setEdadGestacional] = useState<any>()
     const [showEcografia, setShowEcografia] = useState<boolean>(false)
     const [eco_observa, setshowEco_observa] = useState<boolean>(false)
     const [showHpv, setShowHpv] = useState<boolean>(false)
@@ -76,6 +78,7 @@ const EditControlEmbrazada: React.FC = () => {
     const [isLoading, setLoading] = useState<boolean>(false)
     const [motivos, setMotivos] = useState<any>([])
 
+    const repositorySoloFechaControl=new SoloFechaControl
     const repositoryMotivosDerivacion = new Repository<MotivoDeDerivacion>("motivos_derivacion")
     const repositoryControlEmbarazo = new Repository<Control_Embarazo>("control_embarazo")
     const repositoryInmunizacionesControl = new Repository<Inmunizaciones_Control>("inmunizaciones_control")
@@ -83,13 +86,15 @@ const EditControlEmbrazada: React.FC = () => {
     const repositoryEtmisPersonas = new Repository<Etmis_Personas>("etmis_personas")
     const hoy = moment()
     let history = useHistory()
+    
     const handleInputChange = (e: any) => {
         const { name, value } = e.target;
+        
         setControl((prevProps: any) => ({ ...prevProps, [name]: value }));
     }
 
     useEffect(()=>{
-        setFecha1(hoy.format("YYYY-MM-DD"))
+        setFecha1(datos?.data.data.fecha==="undefined"?hoy.format("YYYY-MM-DD"):datos?.data.data.fecha)
     },[])
 
     useIonViewWillEnter(() => {
@@ -97,7 +102,7 @@ const EditControlEmbrazada: React.FC = () => {
         const testDatabaseCopyFromAssets = async (): Promise<any> => {
             try {
                 let res: any = await repositoryMotivosDerivacion.getAll()
-                console.log("Motivos " + JSON.stringify(res))
+                
                 setMotivos(res)
                 return true;
             }
@@ -108,10 +113,15 @@ const EditControlEmbrazada: React.FC = () => {
         testDatabaseCopyFromAssets()
     }, [])
 
-    useIonViewWillEnter(() => {
+    useEffect(() => {
+        //update edad gestacional 
+        setControl(datos?.data.data.controlembarazada)
+        
         
         setPaciente(datos?.data)
-        setControl(datos?.data.data.controlembarazada)
+        
+
+        
 
         datos.data.data?.inmunizaciones.map((data: any, i: any) => {
             switch (data.id_inmunizacion) {
@@ -233,13 +243,33 @@ const EditControlEmbrazada: React.FC = () => {
             setControl((prevProps: any) => ({ ...prevProps, pap: "S" }));
 
         }
-        if (datos.data.paciente?.antecedentes.fum !== null) {
+        if (datos.data.paciente?.antecedentes.fum !== null  ) {
             setControl((prevProps: any) => ({ ...prevProps, edad_gestacional: hoy.diff(datos.data.paciente?.antecedentes.fum, "weeks") }));
         } else {
             setControl((prevProps: any) => ({ ...prevProps, edad_gestacional: 0 }));
         }
 
     }, [])
+
+    
+    useEffect(()=>{
+        let contolemb=datos?.data.data.controlembarazada;
+        if (datos?.data.paciente.antecedentes.fum !== null) {
+            contolemb.edad_gestacional= hoy.diff(datos?.data.paciente.antecedentes.fum, "weeks") ;
+            setEdadGestacional(hoy.diff(datos?.data.paciente.antecedentes.fum, "weeks"))
+            
+        }else if(datos.data.paciente.antecedentes.fpp !== null){
+            setEdadGestacional((hoy.diff(datos?.data.paciente.antecedentes?.fpp, 'weeks')+40))
+            
+           
+        }
+        
+        else {
+            
+           contolemb.edad_gestacional= 0;
+           setEdadGestacional(contolemb.edad_gestacional)
+        }
+    },[])
 
     const fechaNacimiento = (e: any) => {
         const dia = moment(e.detail.value).format("YYYY-MM-DD")
@@ -248,6 +278,9 @@ const EditControlEmbrazada: React.FC = () => {
         setFecha1(dia)
         //setFecha(e.detail.value)
         //setValue('fecha_nacimiento', e.detail.value)
+    }
+    const handleEdadGestacional=(e:any)=>{
+        setEdadGestacional(e.target.value);
     }
     const handleInputChangeEcografia = (e: any) => {
         const { name, value } = e.target;
@@ -301,7 +334,10 @@ const EditControlEmbrazada: React.FC = () => {
         e.preventDefault()
         setLoading(true)
 
-
+        /*cambiar fecha contol */
+        
+        let respControl= await repositorySoloFechaControl.updateFecha(datos?.data.data.id_control,fecha1);
+        if(respControl)console.log("se actualizo fecha ")
         /*Tabla control_embarazo */
         const control_embarazo: any = {};
 
@@ -318,7 +354,7 @@ const EditControlEmbrazada: React.FC = () => {
         control_embarazo.diastolica = control.diastolica;
         control_embarazo.clinico = control.clinico;
         control_embarazo.observaciones = control.observaciones;
-        control_embarazo.edad_gestacional = control.edad_gestacional;
+        control_embarazo.edad_gestacional = edadGestacional;
         control_embarazo.motivo = control.motivo;
 
         /*Laboratorio y cerologia */
@@ -334,7 +370,7 @@ const EditControlEmbrazada: React.FC = () => {
         let newControlEmbarazo: Control_Embarazo = {
             id_control_embarazo: control.id_control_embarazo,
             id_control: control.id_control,
-            edad_gestacional: Number(control_embarazo.edad_gestacional),
+            edad_gestacional: Number(edadGestacional),
             eco: control_embarazo.eco,
             detalle_eco: control_embarazo.detalle_eco,
            
@@ -847,14 +883,13 @@ const EditControlEmbrazada: React.FC = () => {
             }
         }
 
-        //console.log("@@@@@@control " + JSON.stringify(control))
+        
        
     }
 
 
 
-
-    //console.log("@@@@@ paciente" +JSON.stringify (datos?.data.data.fecha))
+   
     return (
         <>
             <IonPage>
@@ -871,20 +906,36 @@ const EditControlEmbrazada: React.FC = () => {
                         OnSubmit(e)
                         .then(()=>{
                             history.push("/personas")
-                            //window.location.reload()
+                            window.location.reload()
                             setLoading(false)
                         })
 
                         }}>
                         <IonItem>
-                            <IonLabel position="floating">Edad Gestacional ({control?.edad_gestacional}Semanas )</IonLabel>
-                            <IonInput type="number" defaultValue={diferencia} value={control?.gestas} name="gestas" onIonChange={e => handleInputChange(e)} ></IonInput>
+                            <IonLabel position="floating">Edad Gestacional ({edadGestacional } Semanas )</IonLabel>
+                            <IonInput type="number"  value={edadGestacional} name="edad_gestacional" onIonChange={e => handleEdadGestacional(e)} ></IonInput>
                         </IonItem>
                          {/* === ION DATE TIME === */}
                      <IonItem>
-                            <IonLabel position="stacked">{fecha1 === null || fecha1 === "null" ?"":"Fecha de Control"}</IonLabel>
-                            {fecha1 === null || fecha1 === "null" ? <IonButton onClick={(e) => setDataPicker(true)} size="small" >Fecha de Control</IonButton> : <IonDatetimeButton datetime="datetime" ></IonDatetimeButton>}
+                            <IonLabel position="stacked">{fecha1 === null || fecha1 === "null" ?"":"Fecha de Control "}</IonLabel>
+                            {fecha1 === null || fecha1 === "null" ? <IonButton onClick={(e) => setDataPicker(true)} size="small" >Fecha de Control</IonButton> : <IonDatetimeButton datetime="datetime"  defaultValue={fecha1} ></IonDatetimeButton>}
+                            <IonModal keepContentsMounted={true} isOpen={datapicker} className="ion-datetime-button-overlay" onDidDismiss={() => setDataPicker(false)}>
+                                <IonDatetime
+                                    
+                                    id="datetime"
+                                    name="fecha_ultimocontrol"
+                                    onIonChange={(e) => setFecha1(e.target.value)}
+                                    presentation="date"
+                                    showDefaultButtons={true}
+                                    doneText="Confirmar"
+                                    showClearButton
+                                    cancelText="Cancelar"
+                                    clearText="Limpiar"
+                                    value={fecha1}
+                                    onIonCancel={() => setDataPicker(false)}
 
+                                />
+                            </IonModal>
                             
                         </IonItem>
                         {/* Ecografia */}
@@ -1199,24 +1250,7 @@ const EditControlEmbrazada: React.FC = () => {
                                 </IonItem>
                             </IonList>
                         </IonCard>
-                        <IonModal keepContentsMounted={true} isOpen={datapicker} onDidDismiss={(e) => setDataPicker(false)} className="ion-datetime-button-overlay">
-                        <IonDatetime
-                            id="datetime"
-                            
-                            name="fecha_control"
-                            onIonChange={(e) => fechaNacimiento(e)}
-                            presentation="date"
-                            showDefaultButtons={true}
-                            showClearButton
-                            doneText="Confirmar"
-                            cancelText="Cancelar"
-                            clearText="Limpiar"
-                            placeholder="fecha"
-                            onIonCancel={(e) => setDataPicker(false)}
-                            
-
-                        />
-                    </IonModal>
+                        
                         <IonButton expand="block" fill="outline" type="submit" disabled={isLoading}>{isLoading ? "Guardando" : "Guardar"}</IonButton>
                     </form>
                 </IonContent>

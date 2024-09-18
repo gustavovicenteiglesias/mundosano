@@ -97,8 +97,7 @@ const FormNuevaEmbAtecedentes: React.FC<any> = ({ datos }) => {
             if(res)console.log("Se actualizo antecedentes")
 
             if (datos.antecedentes.id_app === null) {
-                console.log("@@@@@data" + datos.antecedentes.id_app)
-                console.log("@@@@@datammm" + data.id_app)
+                
                 let newAntecedentesApps:Antecedentes_Apps={
                     id_antecedente:Number(data.id_antecedente) ,
                     id_app: 10,
@@ -213,6 +212,7 @@ const FormNuevaEmbAtecedentes: React.FC<any> = ({ datos }) => {
                 .then(()=>{
                     setError("")
                     history.push("/personas")
+                    window.location.reload()
                 })
 
                 
@@ -233,10 +233,10 @@ const FormNuevaEmbAtecedentes: React.FC<any> = ({ datos }) => {
                 
                
                 let res: any = await repositoryMacs.getAll();
-                console.log("Macs "+JSON.stringify(res))
+                
                 setMacs(res)
                 let resAPP: any = await repositoryApps.getAll();
-                console.log("Apps "+JSON.stringify(resAPP))
+                
                 setApps(resAPP)
               
                 return true;
@@ -255,8 +255,7 @@ const FormNuevaEmbAtecedentes: React.FC<any> = ({ datos }) => {
     useEffect(() => {
 
     }, [error])
-    // console.log("datos "+JSON.stringify(datos))
-    console.log("ante   " + JSON.stringify(ante))
+    
     return (
         <IonContent>
             <form onSubmit={(e) => onSubmit(e)}>

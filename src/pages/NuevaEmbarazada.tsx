@@ -162,7 +162,7 @@ const NuevaEmbarazada: React.FC = () => {
         testDatabaseCopyFromAssets()
     }, [paciente])
     //
-    console.log("@@@@@@paciente " + JSON.stringify(paciente))
+    
     return (
         <IonPage>
             <IonHeader className="ion-no-border">

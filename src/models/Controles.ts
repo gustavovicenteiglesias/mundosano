@@ -1,3 +1,4 @@
+
 export interface Controles{
     id_control:number;
     fecha:Date|string;

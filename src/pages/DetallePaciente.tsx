@@ -4,7 +4,7 @@ import { SQLiteConnection, capSQLiteOptions, SQLiteDBConnection } from "@capacit
 import { SQLiteHook, useSQLite } from 'react-sqlite-hook';
 import { useEffect, useRef, useState } from 'react';
 import { animationBuilder } from "../components/AnimationBuilder"
-
+import { Repository } from "../repository/Repository";
 import DataTable from 'react-data-table-component';
 import { useHistory, useLocation } from 'react-router';
 import moment from 'moment'
@@ -16,6 +16,7 @@ import ControlesPacientes from '../components/ControlesPaciente';
 
 import { IoCreateOutline } from "react-icons/io5";
 import { NOMBRE_BB_DD } from '../utils/constantes';
+import { Personas } from '../models/PersonasModels';
 
 
 export interface control {
@@ -56,14 +57,15 @@ const DetallePaciente: React.FC = () => {
     const location = useLocation();
     const [paciente, setPaciente] = useState<any>(location.state);
     const [controles, setControles] = useState<controls>([])
-    const [showdetalle, setShowDetalle] = useState<boolean>(false)
+    const [showdetalle, setShowDetalle] = useState<boolean>(false);
+
+    const repositoryPaciente = new Repository<Personas>("personas");
 
     let fecha = moment("es")
     let hoy = moment();
     let sqlite = useSQLite()
     const history = useHistory()
-
-
+    
     useEffect(() => {
         setShowDetalle(true)
         const testDatabaseCopyFromAssets = async (): Promise<any> => {
@@ -164,10 +166,10 @@ const DetallePaciente: React.FC = () => {
             case "N":
                 return "Negativo"
                 break;
-            case "S" :
+            case "S":
                 return "Solicitada"
                 break;
-            case  null:
+            case null:
                 return "Solicitada"
                 break;
             case "P":
@@ -178,17 +180,17 @@ const DetallePaciente: React.FC = () => {
                 break;
         }
     }
-    console.log("@@@@@ paciente" + JSON.stringify(paciente))
+    
 
     const handleColor = (data: any): string => {
         switch (data) {
             case null || "S":
                 return "warning"
                 break;
-                case null :
+            case null:
                 return "warning"
                 break;
-                case null :
+            case null:
                 return "warning"
                 break;
             case "P":
@@ -203,6 +205,8 @@ const DetallePaciente: React.FC = () => {
         }
 
     }
+
+   
 
 
     return (
@@ -219,6 +223,9 @@ const DetallePaciente: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent >
+                <div>
+                    <IonButton expand="block" fill="outline" slot='end' onClick={() => { history.push({ pathname: "/nuevoantecedentes", state: paciente }) }}><IoCreateOutline size={32} />{" "}Nuevo Embarazo</IonButton>
+                </div>
                 <div>
                     <IonButton expand="block" fill="outline" slot='end' onClick={() => { history.push({ pathname: "/editantecedentes", state: paciente }) }}><IoCreateOutline size={32} />{" "}Editar Antecedentes</IonButton>
                 </div>
